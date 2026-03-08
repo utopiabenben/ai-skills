@@ -1,0 +1,54 @@
+{
+  "patterns": {
+    "pat-2026-03-05-001": {
+      "id": "pat-2026-03-05-001",
+      "name": "建立学习日志系统",
+      "source": "implementation_review",
+      "confidence": 0.95,
+      "applications": 1,
+      "created": "2026-03-05",
+      "category": "agent_setup",
+      "pattern": "首次上线时立即建立学习日志和长期记忆系统",
+      "problem": "AI 代理容易忘记之前的学习内容和决策",
+      "solution": {
+        "steps": [
+          "创建 memory/ 文件夹",
+          "创建每日学习日志 memory/YYYY-MM-DD.md",
+          "创建长期记忆 MEMORY.md",
+          "记录身份信息到 IDENTITY.md"
+        ]
+      },
+      "quality_rules": [
+        "每次会话开始时读取最近的学习日志和长期记忆",
+        "每次重要事件后立即更新学习日志",
+        "定期将重要经验从每日日志整理到长期记忆"
+      ],
+      "target_skills": ["agent-setup"]
+    },
+    "pat-2026-03-05-002": {
+      "id": "pat-2026-03-05-002",
+      "name": "技能管理优先使用 clawhub",
+      "source": "implementation_review",
+      "confidence": 0.9,
+      "applications": 1,
+      "created": "2026-03-05",
+      "category": "skill_management",
+      "pattern": "使用 clawhub CLI 管理技能的搜索、安装和更新",
+      "problem": "手动管理技能效率低且容易出错",
+      "solution": {
+        "steps": [
+          "使用 npm install -g clawhub 安装 CLI",
+          "使用 clawhub explore 探索热门技能",
+          "使用 clawhub inspect 查看技能详情",
+          "使用 clawhub install 安装技能"
+        ]
+      },
+      "quality_rules": [
+        "注意 clawhub 的速率限制",
+        "安装技能前先 inspect 确认需求",
+        "定期使用 clawhub update 更新已安装技能"
+      ],
+      "target_skills": ["clawhub"]
+    }
+  }
+}

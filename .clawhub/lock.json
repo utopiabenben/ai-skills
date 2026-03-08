@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "obsidian-ontology-sync": {
+      "version": "1.0.1",
+      "installedAt": 1772857686294
+    },
+    "openclaw-tavily-search": {
+      "version": "0.1.0",
+      "installedAt": 1772864971259
+    }
+  }
+}
