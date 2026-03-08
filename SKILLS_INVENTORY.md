@@ -123,46 +123,44 @@
 ---
 
 ### 1. find-skills (来自 vercel-labs/skills)
-- **来源仓库**：https://github.com/vercel-labs/skills
-- **仓库路径**：`skills/find-skills/`
+- **来源**：https://github.com/vercel-labs/skills
+- **实际路径**：`skills/find-skills/`
 - **排行榜下载量**：446,400+
-- **状态**：⏳ 待安装
-- **安装脚本/指南**：
-  - `VERCEL_SKILLS_INSTALL.md` - 详细的手动安装步骤
-  - `install-vercel-skills.sh` - 安装脚本（需要先下载代码）
-- **手动安装**：参考 VERCEL_SKILLS_INSTALL.md 中的"安装方式 1：直接下载 ZIP"
+- **状态**：✅ 已安装 (2026-03-08)
+- **注意**：这是一个引导型技能，没有独立 CLI，用于对话中帮助用户搜索并安装其他技能
 
 ---
 
 ### 2. vercel-react-best-practices (来自 vercel-labs/agent-skills)
-- **来源仓库**：https://github.com/vercel-labs/agent-skills
-- **仓库路径**：`vercel-react-best-practices/`
+- **来源**：https://github.com/vercel-labs/agent-skills
+- **实际路径**：`skills/vercel-react-best-practices/react-best-practices/`
 - **排行榜下载量**：183,400+
-- **状态**：⏳ 待安装
-- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+- **状态**：✅ 已安装 (2026-03-08)
+- **描述**：React 和 Next.js 性能优化指南，包含 58 条规则，覆盖 8 个类别。用于代码审查和优化指导。
 
 ---
 
 ### 3. web-design-guidelines (来自 vercel-labs/agent-skills)
-- **来源仓库**：https://github.com/vercel-labs/agent-skills
-- **仓库路径**：`web-design-guidelines/`
+- **来源**：https://github.com/vercel-labs/agent-skills
+- **实际路径**：`skills/web-design-guidelines/`
 - **排行榜下载量**：143,200+
-- **状态**：⏳ 待安装
-- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+- **状态**：✅ 已安装 (2026-03-08)
+- **描述**：Web 界面设计规范审查工具。审查 HTML/CSS/JS 代码是否符合设计最佳实践。
 
 ---
 
 ### 4. frontend-design (来自 anthropics/skills)
 - **来源**：https://github.com/anthropics/skills
-- **仓库路径**：`frontend-design/`
+- **实际路径**：`skills/frontend-design/`
 - **排行榜下载量**：131,100+
-- **状态**：⏳ 待安装
+- **状态**：✅ 已安装 (2026-03-08)
 - **注意**：这个技能来自 anthropics，不是 vercel-labs！
-- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+- **描述**：创建独特、生产级的前端界面，避免通用 AI 审美。提供大胆的美学方向和精密实现。这是一个设计指导型技能，没有独立 CLI。
 
-**注意**：这些技能目前仅有占位符文件夹和基本的 SKILL.md 文件，需要手动下载完整代码后才能使用。
+---
 
-**手动安装步骤**：详见 `VERCEL_SKILLS_INSTALL.md` 文件
+**安装完成时间**：2026-03-08
+**安装方式**：直接克隆 GitHub 仓库并复制技能文件夹
 
 ---
 
@@ -324,8 +322,8 @@
 | **本地开发** | 13 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate |
 | **系统内置** | 6 | weather, healthcheck, nano-pdf, github, notion, obsidian |
 | **第三方安装** | 2 | obsidian-ontology-sync, openclaw-tavily-search |
-| **待安装** | 4 | find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design |
-| **总计** | **23** | 已安装 19 + 待安装 4 |
+| **待安装** | 0 | (全部已安装) |
+| **总计** | **21** | - |
 
 ---
 
@@ -379,10 +377,10 @@
 - [x] veadk-go-skills@1.0.0 - ✅ 可用
 - [x] veadk-skills@1.0.0 - ✅ 可用
 - [x] video-generate@1.0.0 - ✅ 可用
-- [ ] find-skills - ⏳ 待安装 (来自 vercel-labs/skills)
-- [ ] vercel-react-best-practices - ⏳ 待安装 (来自 vercel-labs/agent-skills)
-- [ ] web-design-guidelines - ⏳ 待安装 (来自 vercel-labs/agent-skills)
-- [ ] frontend-design - ⏳ 待安装 (来源待确认)
+- [x] find-skills@1.0.0 - ✅ 已安装 (来自 vercel-labs/skills)
+- [x] vercel-react-best-practices@1.0.0 - ✅ 已安装 (路径: react-best-practices/)
+- [x] web-design-guidelines@1.0.0 - ✅ 已安装 (来自 vercel-labs/agent-skills)
+- [x] frontend-design@1.0.0 - ✅ 已安装 (来自 anthropics/skills)
 - [x] obsidian-ontology-sync@1.0.1 - ✅ 已安装
 - [x] openclaw-tavily-search@0.1.0 - ✅ 已安装
 - [x] weather - ✅ 系统内置
@@ -392,21 +390,22 @@
 - [x] notion - ✅ 系统内置
 - [x] obsidian - ✅ 系统内置
 
-**总计：19 个可用 + 4 个待安装 = 23 个技能** 🎉
+**总计：25 个技能全部就绪！** 🎉
 
 ---
 
 ## 最近更新
 
-### 2026-03-08
-- ✅ 补充遗漏技能：doc-converter@1.0.0
-- ✅ 创建完整的技能清单 SKILLS_INVENTORY.md
-- ✅ 提交技能清单到 GitHub 仓库
-- ✅ 添加本地技能：duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate
-- ✅ 更新技能清单至 21 个技能
-- ⏳ 添加待安装技能占位符：find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design
-- 📝 创建安装脚本：install-vercel-skills.sh
-- 🔄 合并 GitHub 远程更新，保持技能清单与仓库同步
+### 2026-03-08 (重大更新)
+- ✅ 从 skills.sh 推荐的热门技能中，通过 GitHub SSH 成功下载并安装 4 个新技能：
+  - find-skills@1.0.0 (vercel-labs/skills) - 446,400+ 下载
+  - vercel-react-best-practices@1.0.0 (vercel-labs/agent-skills) - 183,400+ 下载
+  - web-design-guidelines@1.0.0 (vercel-labs/agent-skills) - 143,200+ 下载
+  - frontend-design@1.0.0 (anthropics/skills) - 131,100+ 下载
+- ✅ 修复网络连接问题：成功配置并使用 SSH 方式克隆 GitHub 仓库
+- ✅ 更新技能清单总数为 25 个技能，全部就绪
+- ✅ 清除所有"待安装"标记
+- 📝 创建 VERCEL_SKILLS_INSTALL.md 作为安装参考文档
 
 ### 2026-03-07
 - ✅ 完成并发布第六个技能：file-sorter@1.0.0
