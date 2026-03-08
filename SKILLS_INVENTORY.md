@@ -199,6 +199,53 @@
 
 ---
 
+### 14. find-skills@1.0.0
+- **路径**：`skills/find-skills/`
+- **描述**：来自 vercel-labs/skills 的技能发现和搜索工具
+- **主要功能**：
+  - 搜索和发现可用的AI技能
+  - 技能分类和筛选
+  - 技能元数据查询
+- **来源**：vercel-labs/skills
+- **状态**：✅ 已安装
+
+---
+
+### 15. vercel-react-best-practices@1.0.0
+- **路径**：`skills/vercel-react-best-practices/`
+- **描述**：来自 vercel-labs/agent-skills 的React最佳实践指南
+- **主要功能**：
+  - React开发最佳实践
+  - Vercel部署指南
+  - React组件设计模式
+- **来源**：vercel-labs/agent-skills
+- **状态**：✅ 已安装
+
+---
+
+### 16. web-design-guidelines@1.0.0
+- **路径**：`skills/web-design-guidelines/`
+- **描述**：来自 vercel-labs/agent-skills 的网页设计指南
+- **主要功能**：
+  - 网页设计最佳实践
+  - UI/UX设计原则
+  - 响应式设计指南
+- **来源**：vercel-labs/agent-skills
+- **状态**：✅ 已安装
+
+---
+
+### 17. frontend-design@1.0.0
+- **路径**：`skills/frontend-design/`
+- **描述**：前端设计和开发技能集合
+- **主要功能**：
+  - 前端开发最佳实践
+  - 现代前端框架指南
+  - 前端性能优化
+- **状态**：✅ 已安装
+
+---
+
 ## 系统内置技能 (Built-in Skills)
 
 ### 1. weather
@@ -277,10 +324,10 @@
 
 | 类别 | 技能数量 | 技能列表 |
 |------|---------|---------|
-| **本地开发** | 13 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate |
+| **本地开发** | 17 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate, find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design |
 | **系统内置** | 6 | weather, healthcheck, nano-pdf, github, notion, obsidian |
 | **第三方安装** | 2 | obsidian-ontology-sync, openclaw-tavily-search |
-| **总计** | **21** | - |
+| **总计** | **25** | - |
 
 ---
 
@@ -334,6 +381,10 @@
 - [x] veadk-go-skills@1.0.0 - ✅ 可用
 - [x] veadk-skills@1.0.0 - ✅ 可用
 - [x] video-generate@1.0.0 - ✅ 可用
+- [x] find-skills@1.0.0 - ✅ 可用
+- [x] vercel-react-best-practices@1.0.0 - ✅ 可用
+- [x] web-design-guidelines@1.0.0 - ✅ 可用
+- [x] frontend-design@1.0.0 - ✅ 可用
 - [x] obsidian-ontology-sync@1.0.1 - ✅ 已安装
 - [x] openclaw-tavily-search@0.1.0 - ✅ 已安装
 - [x] weather - ✅ 系统内置
@@ -343,7 +394,7 @@
 - [x] notion - ✅ 系统内置
 - [x] obsidian - ✅ 系统内置
 
-**总计：21 个技能全部就绪！** 🎉
+**总计：25 个技能全部就绪！** 🎉
 
 ---
 
@@ -355,6 +406,8 @@
 - ✅ 提交技能清单到 GitHub 仓库
 - ✅ 添加本地技能：duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate
 - ✅ 更新技能清单至 21 个技能
+- ✅ 添加新技能：find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design
+- ✅ 更新技能清单至 25 个技能
 
 ### 2026-03-07
 - ✅ 完成并发布第六个技能：file-sorter@1.0.0

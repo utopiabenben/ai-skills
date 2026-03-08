@@ -4,7 +4,7 @@ This repository contains a collection of AI skills for OpenClaw agents.
 
 ## Skills List
 
-### 本地开发技能 (Local Skills - 13个)
+### 本地开发技能 (Local Skills - 17个)
 
 1. **batch-renamer** - 批量文件重命名工具
 2. **photo-organizer** - 照片批量整理工具
@@ -19,6 +19,10 @@ This repository contains a collection of AI skills for OpenClaw agents.
 11. **veadk-go-skills** - VeADK-Go相关技能和工具
 12. **veadk-skills** - VeADK相关技能和工具
 13. **video-generate** - 视频生成功能
+14. **find-skills** - 技能发现和搜索工具（vercel-labs/skills）
+15. **vercel-react-best-practices** - React最佳实践指南（vercel-labs/agent-skills）
+16. **web-design-guidelines** - 网页设计指南（vercel-labs/agent-skills）
+17. **frontend-design** - 前端设计和开发技能集合
 
 ### 系统内置技能 (Built-in Skills - 6个)
 
@@ -34,7 +38,7 @@ This repository contains a collection of AI skills for OpenClaw agents.
 1. **obsidian-ontology-sync** - Obsidian笔记与结构化本体同步
 2. **openclaw-tavily-search** - Tavily网络搜索
 
-**总计：21个技能** 🎉
+**总计：25个技能** 🎉
 
 ## Detailed Inventory
 
