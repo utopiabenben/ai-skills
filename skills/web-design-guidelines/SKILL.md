@@ -1,17 +1,39 @@
-# Web Design Guidelines 技能
+---
+name: web-design-guidelines
+description: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices".
+metadata:
+  author: vercel
+  version: "1.0.0"
+  argument-hint: <file-or-pattern>
+---
 
-来自 vercel-labs/agent-skills 的网页设计指南。
+# Web Interface Guidelines
 
-## 功能
+Review files for compliance with Web Interface Guidelines.
 
-- 网页设计最佳实践
-- UI/UX设计原则
-- 响应式设计指南
+## How It Works
 
-## 来源
+1. Fetch the latest guidelines from the source URL below
+2. Read the specified files (or prompt user for files/pattern)
+3. Check against all rules in the fetched guidelines
+4. Output findings in the terse `file:line` format
 
-- vercel-labs/agent-skills
+## Guidelines Source
 
-## 状态
+Fetch fresh guidelines before each review:
 
-✅ 已安装
+```
+https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+```
+
+Use WebFetch to retrieve the latest rules. The fetched content contains all the rules and output format instructions.
+
+## Usage
+
+When a user provides a file or pattern argument:
+1. Fetch guidelines from the source URL above
+2. Read the specified files
+3. Apply all rules from the fetched guidelines
+4. Output findings using the format specified in the guidelines
+
+If no files specified, ask the user which files to review.
