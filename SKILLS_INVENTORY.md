@@ -122,6 +122,83 @@
 
 ---
 
+### 8. duckduckgo-search@1.0.0
+- **路径**：`skills/duckduckgo-search/`
+- **描述**：使用 DuckDuckGo 进行网页搜索，无需 API 密钥，无需额外依赖
+- **主要功能**：
+  - 网页搜索
+  - 获取搜索结果摘要
+  - 无需 API 密钥
+  - 无需额外 Python 依赖
+- **使用方法**：`python search.py "搜索关键词"`
+- **特点**：隐私优先（DuckDuckGo 不追踪用户）、免费使用、轻量级
+- **状态**：✅ 开发完成，已发布
+
+---
+
+### 9. image-analysis@1.0.0
+- **路径**：`skills/image-analysis/`
+- **描述**：图片分析与 OCR（光学字符识别）技能，用于识别图片中的文字和内容
+- **主要功能**：
+  - 图片文字识别（OCR）
+  - 支持多种图片格式（JPG, PNG, etc.）
+  - 提取图片中的文本内容
+- **使用方法**：`python analyze.py /path/to/image.jpg`
+- **状态**：✅ 开发完成，已发布
+
+---
+
+### 10. image-generate@1.0.0
+- **路径**：`skills/image-generate/`
+- **描述**：使用内置 image_generate.py 脚本生成图片，准备清晰具体的 prompt
+- **主要功能**：
+  - 根据文本描述生成图片
+  - 支持多种图片生成模型
+  - 灵活的 API 密钥配置
+- **使用方法**：`python scripts/image_generate.py "一只可爱的猫"`
+- **认证方式**：MODEL_IMAGE_API_KEY, ARK_API_KEY, 或 VOLCENGINE_ACCESS_KEY/VOLCENGINE_SECRET_KEY
+- **状态**：✅ 开发完成，已发布
+
+---
+
+### 11. veadk-go-skills@1.0.0
+- **路径**：`skills/veadk-go-skills/`
+- **描述**：VeADK-Go 相关技能和工具，包括直接根据需求生成 Agent，将 Enio Agent 转换为 VeADK-Go Agent
+- **主要功能**：
+  - 直接根据需求生成 VeADK-Go Agent
+  - 将 Enio Agent 转换为 VeADK-Go Agent
+  - 提供 VeADK-Go 开发框架的代码结构、功能特性以及代码示例
+- **参考文档**：`common/*.md`, `converter/enio_rule.md`
+- **状态**：✅ 开发完成，已发布
+
+---
+
+### 12. veadk-skills@1.0.0
+- **路径**：`skills/veadk-skills/`
+- **描述**：VeADK 相关技能和工具，包括根据需求生成 Agent，将 Langchain/Dify 工作流转换为 VeADK Agent
+- **主要功能**：
+  - 直接根据需求生成 VeADK Agent
+  - 将 Langchain/Langgraph 代码转换为 VeADK Agent
+  - 将 Dify 工作流转换为 VeADK Agent
+  - 提供 VeADK 开发框架的代码结构、功能特性以及代码示例
+- **参考文档**：`references/common/*.md`, `references/converter/*.md`, `references/generator/*.md`
+- **状态**：✅ 开发完成，已发布
+
+---
+
+### 13. video-generate@1.0.0
+- **路径**：`skills/video-generate/`
+- **描述**：使用 video_generate.py 脚本生成视频，需要提供文件名和 prompt，可选提供首帧图片
+- **主要功能**：
+  - 根据文本描述生成视频
+  - 支持通过首帧图片控制视频起始画面
+  - 首帧可以是 URL 或本地文件路径
+- **使用方法**：`python scripts/video_generate.py "cat.mp4" "一只可爱的猫"`
+- **认证方式**：MODEL_VIDEO_API_KEY, ARK_API_KEY, 或 VOLCENGINE_ACCESS_KEY/VOLCENGINE_SECRET_KEY
+- **状态**：✅ 开发完成，已发布
+
+---
+
 ## 系统内置技能 (Built-in Skills)
 
 ### 1. weather
@@ -200,10 +277,10 @@
 
 | 类别 | 技能数量 | 技能列表 |
 |------|---------|---------|
-| **本地开发** | 7 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter |
+| **本地开发** | 13 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate |
 | **系统内置** | 6 | weather, healthcheck, nano-pdf, github, notion, obsidian |
 | **第三方安装** | 2 | obsidian-ontology-sync, openclaw-tavily-search |
-| **总计** | **15** | - |
+| **总计** | **21** | - |
 
 ---
 
@@ -251,6 +328,12 @@
 - [x] music-tagger@1.0.0 - ✅ 可用
 - [x] file-sorter@1.0.0 - ✅ 可用
 - [x] doc-converter@1.0.0 - ✅ 可用
+- [x] duckduckgo-search@1.0.0 - ✅ 可用
+- [x] image-analysis@1.0.0 - ✅ 可用
+- [x] image-generate@1.0.0 - ✅ 可用
+- [x] veadk-go-skills@1.0.0 - ✅ 可用
+- [x] veadk-skills@1.0.0 - ✅ 可用
+- [x] video-generate@1.0.0 - ✅ 可用
 - [x] obsidian-ontology-sync@1.0.1 - ✅ 已安装
 - [x] openclaw-tavily-search@0.1.0 - ✅ 已安装
 - [x] weather - ✅ 系统内置
@@ -260,7 +343,7 @@
 - [x] notion - ✅ 系统内置
 - [x] obsidian - ✅ 系统内置
 
-**总计：15 个技能全部就绪！** 🎉
+**总计：21 个技能全部就绪！** 🎉
 
 ---
 
@@ -270,6 +353,8 @@
 - ✅ 补充遗漏技能：doc-converter@1.0.0
 - ✅ 创建完整的技能清单 SKILLS_INVENTORY.md
 - ✅ 提交技能清单到 GitHub 仓库
+- ✅ 添加本地技能：duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate
+- ✅ 更新技能清单至 21 个技能
 
 ### 2026-03-07
 - ✅ 完成并发布第六个技能：file-sorter@1.0.0
