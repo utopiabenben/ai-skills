@@ -107,6 +107,21 @@
 
 ---
 
+### 7. doc-converter@1.0.0
+- **路径**：`skills/doc-converter/`
+- **描述**：文档格式批量转换工具，支持 PDF、Word、Excel、PowerPoint、图片等多种格式之间的批量转换
+- **主要功能**：
+  - 支持多种文档格式转换（PDF ↔ Word ↔ Excel ↔ PPT ↔ 图片）
+  - 批量转换整个文件夹
+  - 预览模式（先看效果再执行）
+  - 撤销操作（安全可靠）
+- **支持格式**：pdf, docx, xlsx, pptx, jpg, png
+- **依赖**：`pdf2docx`, `docx2pdf`, `pdf2image`, `Pillow`, `python-docx`, `openpyxl`, `python-pptx`
+- **适用场景**：批量文档转换，如 PDF 转 Word、图片转 PDF、Word 转 PDF 等
+- **状态**：✅ 开发完成，已发布
+
+---
+
 ## 系统内置技能 (Built-in Skills)
 
 ### 1. weather
@@ -185,17 +200,17 @@
 
 | 类别 | 技能数量 | 技能列表 |
 |------|---------|---------|
-| **本地开发** | 6 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter |
+| **本地开发** | 7 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter |
 | **系统内置** | 6 | weather, healthcheck, nano-pdf, github, notion, obsidian |
 | **第三方安装** | 2 | obsidian-ontology-sync, openclaw-tavily-search |
-| **总计** | **14** | - |
+| **总计** | **15** | - |
 
 ---
 
 ## 技能之间关系
 
 ### 文件管理技能套件（批量开发）
-这 6 个技能形成了一个完整的文件管理和组织解决方案：
+这 7 个技能形成了一个完整的文件管理和组织解决方案：
 
 1. **batch-renamer**：通用的批量重命名工具
 2. **photo-organizer**：专门针对照片（使用 EXIF 信息）
@@ -203,6 +218,7 @@
 4. **video-organizer**：专门针对视频文件（按时间/格式整理 + 重命名）
 5. **music-tagger**：专门针对音乐文件（编辑元数据 + 按标签整理）
 6. **file-sorter**：通用智能分类工具（按类型/大小/日期多种规则）
+7. **doc-converter**：文档格式转换工具（PDF ↔ Word ↔ Excel ↔ PPT ↔ 图片）
 
 ### 知识管理技能组合
 - **obsidian**：操作 Obsidian 笔记库
@@ -234,6 +250,7 @@
 - [x] video-organizer@1.0.0 - ✅ 可用
 - [x] music-tagger@1.0.0 - ✅ 可用
 - [x] file-sorter@1.0.0 - ✅ 可用
+- [x] doc-converter@1.0.0 - ✅ 可用
 - [x] obsidian-ontology-sync@1.0.1 - ✅ 已安装
 - [x] openclaw-tavily-search@0.1.0 - ✅ 已安装
 - [x] weather - ✅ 系统内置
@@ -243,16 +260,20 @@
 - [x] notion - ✅ 系统内置
 - [x] obsidian - ✅ 系统内置
 
-**总计：14 个技能全部就绪！** 🎉
+**总计：15 个技能全部就绪！** 🎉
 
 ---
 
 ## 最近更新
 
+### 2026-03-08
+- ✅ 补充遗漏技能：doc-converter@1.0.0
+- ✅ 创建完整的技能清单 SKILLS_INVENTORY.md
+- ✅ 提交技能清单到 GitHub 仓库
+
 ### 2026-03-07
 - ✅ 完成并发布第六个技能：file-sorter@1.0.0
 - ✅ 安装两个新技能：obsidian-ontology-sync@1.0.1、openclaw-tavily-search@0.1.0
-- ✅ 创建统一的技能清单文档（本文件）
 
 ### 2026-03-06
 - ✅ 批量开发完成并发布 5 个技能：
