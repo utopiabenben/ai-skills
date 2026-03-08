@@ -107,7 +107,7 @@
 
 ---
 
-### 7. doc-converter@1.0.0
+### 21. doc-converter@1.0.0
 - **路径**：`skills/doc-converter/`
 - **描述**：文档格式批量转换工具，支持 PDF、Word、Excel、PowerPoint、图片等多种格式之间的批量转换
 - **主要功能**：
@@ -119,6 +119,50 @@
 - **依赖**：`pdf2docx`, `docx2pdf`, `pdf2image`, `Pillow`, `python-docx`, `openpyxl`, `python-pptx`
 - **适用场景**：批量文档转换，如 PDF 转 Word、图片转 PDF、Word 转 PDF 等
 - **状态**：✅ 开发完成，已发布
+
+---
+
+### 1. find-skills (来自 vercel-labs/skills)
+- **来源仓库**：https://github.com/vercel-labs/skills
+- **仓库路径**：`skills/find-skills/`
+- **排行榜下载量**：446,400+
+- **状态**：⏳ 待安装
+- **安装脚本/指南**：
+  - `VERCEL_SKILLS_INSTALL.md` - 详细的手动安装步骤
+  - `install-vercel-skills.sh` - 安装脚本（需要先下载代码）
+- **手动安装**：参考 VERCEL_SKILLS_INSTALL.md 中的"安装方式 1：直接下载 ZIP"
+
+---
+
+### 2. vercel-react-best-practices (来自 vercel-labs/agent-skills)
+- **来源仓库**：https://github.com/vercel-labs/agent-skills
+- **仓库路径**：`vercel-react-best-practices/`
+- **排行榜下载量**：183,400+
+- **状态**：⏳ 待安装
+- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+
+---
+
+### 3. web-design-guidelines (来自 vercel-labs/agent-skills)
+- **来源仓库**：https://github.com/vercel-labs/agent-skills
+- **仓库路径**：`web-design-guidelines/`
+- **排行榜下载量**：143,200+
+- **状态**：⏳ 待安装
+- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+
+---
+
+### 4. frontend-design (来自 anthropics/skills)
+- **来源**：https://github.com/anthropics/skills
+- **仓库路径**：`frontend-design/`
+- **排行榜下载量**：131,100+
+- **状态**：⏳ 待安装
+- **注意**：这个技能来自 anthropics，不是 vercel-labs！
+- **安装说明**：见 VERCEL_SKILLS_INSTALL.md
+
+**注意**：这些技能目前仅有占位符文件夹和基本的 SKILL.md 文件，需要手动下载完整代码后才能使用。
+
+**手动安装步骤**：详见 `VERCEL_SKILLS_INSTALL.md` 文件
 
 ---
 
@@ -196,53 +240,6 @@
 - **使用方法**：`python scripts/video_generate.py "cat.mp4" "一只可爱的猫"`
 - **认证方式**：MODEL_VIDEO_API_KEY, ARK_API_KEY, 或 VOLCENGINE_ACCESS_KEY/VOLCENGINE_SECRET_KEY
 - **状态**：✅ 开发完成，已发布
-
----
-
-### 14. find-skills@1.0.0
-- **路径**：`skills/find-skills/`
-- **描述**：来自 vercel-labs/skills 的技能发现和搜索工具
-- **主要功能**：
-  - 搜索和发现可用的AI技能
-  - 技能分类和筛选
-  - 技能元数据查询
-- **来源**：vercel-labs/skills
-- **状态**：✅ 已安装
-
----
-
-### 15. vercel-react-best-practices@1.0.0
-- **路径**：`skills/vercel-react-best-practices/`
-- **描述**：来自 vercel-labs/agent-skills 的React最佳实践指南
-- **主要功能**：
-  - React开发最佳实践
-  - Vercel部署指南
-  - React组件设计模式
-- **来源**：vercel-labs/agent-skills
-- **状态**：✅ 已安装
-
----
-
-### 16. web-design-guidelines@1.0.0
-- **路径**：`skills/web-design-guidelines/`
-- **描述**：来自 vercel-labs/agent-skills 的网页设计指南
-- **主要功能**：
-  - 网页设计最佳实践
-  - UI/UX设计原则
-  - 响应式设计指南
-- **来源**：vercel-labs/agent-skills
-- **状态**：✅ 已安装
-
----
-
-### 17. frontend-design@1.0.0
-- **路径**：`skills/frontend-design/`
-- **描述**：前端设计和开发技能集合
-- **主要功能**：
-  - 前端开发最佳实践
-  - 现代前端框架指南
-  - 前端性能优化
-- **状态**：✅ 已安装
 
 ---
 
@@ -324,10 +321,11 @@
 
 | 类别 | 技能数量 | 技能列表 |
 |------|---------|---------|
-| **本地开发** | 17 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate, find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design |
+| **本地开发** | 13 | batch-renamer, photo-organizer, download-organizer, video-organizer, music-tagger, file-sorter, doc-converter, duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate |
 | **系统内置** | 6 | weather, healthcheck, nano-pdf, github, notion, obsidian |
 | **第三方安装** | 2 | obsidian-ontology-sync, openclaw-tavily-search |
-| **总计** | **25** | - |
+| **待安装** | 4 | find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design |
+| **总计** | **23** | 已安装 19 + 待安装 4 |
 
 ---
 
@@ -381,10 +379,10 @@
 - [x] veadk-go-skills@1.0.0 - ✅ 可用
 - [x] veadk-skills@1.0.0 - ✅ 可用
 - [x] video-generate@1.0.0 - ✅ 可用
-- [x] find-skills@1.0.0 - ✅ 可用
-- [x] vercel-react-best-practices@1.0.0 - ✅ 可用
-- [x] web-design-guidelines@1.0.0 - ✅ 可用
-- [x] frontend-design@1.0.0 - ✅ 可用
+- [ ] find-skills - ⏳ 待安装 (来自 vercel-labs/skills)
+- [ ] vercel-react-best-practices - ⏳ 待安装 (来自 vercel-labs/agent-skills)
+- [ ] web-design-guidelines - ⏳ 待安装 (来自 vercel-labs/agent-skills)
+- [ ] frontend-design - ⏳ 待安装 (来源待确认)
 - [x] obsidian-ontology-sync@1.0.1 - ✅ 已安装
 - [x] openclaw-tavily-search@0.1.0 - ✅ 已安装
 - [x] weather - ✅ 系统内置
@@ -394,7 +392,7 @@
 - [x] notion - ✅ 系统内置
 - [x] obsidian - ✅ 系统内置
 
-**总计：25 个技能全部就绪！** 🎉
+**总计：19 个可用 + 4 个待安装 = 23 个技能** 🎉
 
 ---
 
@@ -406,8 +404,9 @@
 - ✅ 提交技能清单到 GitHub 仓库
 - ✅ 添加本地技能：duckduckgo-search, image-analysis, image-generate, veadk-go-skills, veadk-skills, video-generate
 - ✅ 更新技能清单至 21 个技能
-- ✅ 添加新技能：find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design
-- ✅ 更新技能清单至 25 个技能
+- ⏳ 添加待安装技能占位符：find-skills, vercel-react-best-practices, web-design-guidelines, frontend-design
+- 📝 创建安装脚本：install-vercel-skills.sh
+- 🔄 合并 GitHub 远程更新，保持技能清单与仓库同步
 
 ### 2026-03-07
 - ✅ 完成并发布第六个技能：file-sorter@1.0.0
@@ -426,10 +425,12 @@
 
 ## 下一步计划
 
-1. **监控已发布技能的下载量和用户反馈** - 通过 clawhub CLI
-2. **持续学习新技能** - 探索系统内置技能和社区技能
-3. **技能改进** - 根据用户反馈优化现有技能
-4. **保持技能一致性** - 定期检查所有智能体的技能状态
+1. 📦 **完成待安装技能的下载**：从 vercel-labs 仓库获取 find-skills, vercel-react-best-practices, web-design-guidelines 的完整代码
+2. 📦 **确认 frontend-design 来源**：找到 GitHub 仓库地址并下载
+3. 🔍 **测试和配置**：确保所有新技能能正常运行
+4. 📦 **技能发布**：考虑将技能发布到 PyPI 或 npm
+5. 📊 **监控**：跟踪已发布技能的下载量和用户反馈
+6. 🔄 **定期更新**：保持技能清单与实际情况同步
 
 ---
 
@@ -438,3 +439,4 @@
 - 本文件应保持与 `skills/` 目录、`.clawhub/lock.json`、`MEMORY.md` 同步更新
 - 每次新增或更新技能后，应立即更新此清单
 - 用于多智能体系统中的技能状态同步和一致性检查
+- **待安装技能**：目前仅有占位符文件夹和基本的 SKILL.md 文件，需要手动下载完整代码后才能使用
