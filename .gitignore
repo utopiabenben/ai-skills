@@ -1,0 +1,27 @@
+# OpenClaw workspace files
+.openclaw/
+memory/
+xiaohai/
+
+# Personal identity files
+IDENTITY.md
+USER.md
+
+# System files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
