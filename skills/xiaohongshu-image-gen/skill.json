@@ -1,0 +1,14 @@
+{
+  "name": "xiaohongshu-image-gen",
+  "version": "1.0.0",
+  "description": "小红书图片生成技能 - 针对家装、美食、穿搭等赛道的AI图片生成",
+  "author": "智脑",
+  "tags": ["xiaohongshu", "image", "ai", "home-design", "content"],
+  "install": "bash install.sh",
+  "skills": {
+    "xiaohongshu-image-gen": {
+      "command": "python3 source/xiaohongshu_image_gen.py",
+      "description": "生成适合小红书风格的图片（家装、美食、穿搭等）"
+    }
+  }
+}

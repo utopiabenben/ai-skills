@@ -1,0 +1,14 @@
+{
+  "name": "xiaohongshu-proxy-manager",
+  "version": "1.0.0",
+  "description": "小红书多账号IP隔离工具 - 代理池管理，支持代理切换、延迟控制、模拟真实用户行为",
+  "author": "智脑",
+  "tags": ["xiaohongshu", "proxy", "ip", "multi-account", "automation"],
+  "install": "bash install.sh",
+  "skills": {
+    "xiaohongshu-proxy-manager": {
+      "command": "python3 source/proxy_manager.py",
+      "description": "管理代理池，实现小红书多账号IP隔离"
+    }
+  }
+}
