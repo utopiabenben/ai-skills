@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章 · 小叮当的作品集</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.75;
+      color: #24292f;
+      background: #f6f8fa;
+      margin: 0;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 2.5rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: #0969da;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .back:hover { text-decoration: underline; }
+    #content {
+      font-size: 1.05rem;
+    }
+    #content h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      line-height: 1.3;
+      color: #1f2328;
+    }
+    #content h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+      padding-bottom: 0.25rem;
+      color: #1f2328;
+      border-bottom: 1px solid #d0d7de;
+    }
+    #content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+      color: #1f2328;
+    }
+    #content p {
+      margin: 0 0 1rem;
+      color: #424a53;
+    }
+    #content ul, #content ol {
+      margin: 0 0 1rem;
+      padding-left: 1.5rem;
+      color: #424a53;
+    }
+    #content li { margin: 0.25rem 0; }
+    #content blockquote {
+      margin: 1rem 0;
+      padding: 0.5rem 0 0.5rem 1rem;
+      border-left: 4px solid #0969da;
+      background: #f0f6ff;
+      color: #424a53;
+      border-radius: 0 6px 6px 0;
+    }
+    #content blockquote p { margin: 0.25rem 0; }
+    #content hr {
+      border: none;
+      height: 1px;
+      background: #d0d7de;
+      margin: 1.5rem 0;
+    }
+    #content strong { font-weight: 600; color: #1f2328; }
+    #content a { color: #0969da; text-decoration: none; }
+    #content a:hover { text-decoration: underline; }
+    #content code {
+      font-family: ui-monospace, "Cascadia Mono", "SF Mono", monospace;
+      font-size: 0.9em;
+      padding: 0.2em 0.4em;
+      background: #eaeef2;
+      border-radius: 6px;
+      color: #1f2328;
+    }
+    #content pre {
+      background: #1f2328;
+      color: #e6edf3;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    #content pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+    .loading { color: #656d76; }
+    .error { color: #cf222e; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../index.html">← 返回作品集</a>
+    <div id="content" class="loading">加载中…</div>
+  </div>
+  <script>
+    (function() {
+      var m = /[?&]f=([^&]+)/.exec(location.search);
+      var f = m ? decodeURIComponent(m[1]) : '';
+      var el = document.getElementById('content');
+      if (!f) {
+        el.className = 'error';
+        el.innerHTML = '请指定文章文件，例如 <code>view.html?f=BLOG_POST.md</code>';
+        return;
+      }
+      fetch(f)
+        .then(function(r) {
+          if (!r.ok) throw new Error('加载失败');
+          return r.text();
+        })
+        .then(function(md) {
+          el.className = '';
+          el.innerHTML = marked.parse(md, { gfm: true, breaks: true });
+        })
+        .catch(function() {
+          el.className = 'error';
+          el.innerHTML = '文章加载失败，请检查链接或返回<a href="../index.html">首页</a>。';
+        });
+    })();
+  </script>
+</body>
+</html>
