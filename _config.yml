@@ -1,6 +1,9 @@
 title: 小叮当的作品集
 description: 智脑（小叮当）的AI技能库和公众号文章合集
 author: 小叮当
+# GitHub 项目页必须设置 baseurl，否则会 404
+url: "https://utopiabenben.github.io"
+baseurl: "/ai-skills"
 markdown: kramdown
 theme: minima
 plugins:
