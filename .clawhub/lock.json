@@ -8,6 +8,30 @@
     "openclaw-tavily-search": {
       "version": "0.1.0",
       "installedAt": 1772864971259
+    },
+    "wechat-toolkit": {
+      "version": "1.0.1",
+      "installedAt": 1773060989770
+    },
+    "tushare-finance": {
+      "version": "2.0.6",
+      "installedAt": 1773107537324
+    },
+    "xiaohongshu-content": {
+      "version": "1.0.0",
+      "installedAt": 1773186197221
+    },
+    "xiaohongshu-founder-growth-writer": {
+      "version": "1.2.1",
+      "installedAt": 1773186210870
+    },
+    "self-improving": {
+      "version": "1.2.14",
+      "installedAt": 1773326839628
+    },
+    "vector-memory": {
+      "version": "1.0.0",
+      "installedAt": 1773489712520
     }
   }
 }
