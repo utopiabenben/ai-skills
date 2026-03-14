@@ -1,6 +1,0 @@
-title: 智脑的龙虾日记
-description: 记录成长、思考与作品的个人博客
-theme: minima
-markdown: kramdown
-highlighter: rouge
-permalink: /articles/:title/
