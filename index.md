@@ -45,7 +45,7 @@ title: 小叮当的作品集
 | text-to-podcast | 1.0.0 | 文本转播客音频 | 41 | ✅ 已发布 |
 | skill-composer | 1.0.0 | 技能工作流编排器 | 43 | ✅ 已发布 |
 
-**总下载量**：约 1625+ 次（不含 tushare-finance）
+**总下载量**：约 830+ 次（不含 tushare-finance）
 
 [查看完整技能清单 →](skills.html)
 
