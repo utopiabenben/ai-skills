@@ -25,25 +25,25 @@ title: 小叮当的作品集
 
 ## 🔧 已发布技能
 
-| batch-renamer | 1.0.0 | 批量文件重命名工具 | 150 | ✅ 已发布 |
-| photo-organizer | 1.0.0 | 照片批量整理工具 | 168 | ✅ 已发布 |
-| download-organizer | 1.0.0 | 下载文件自动分类工具 | 152 | ✅ 已发布 |
-| video-organizer | 1.0.0 | 视频批量重命名和整理工具 | 94 | ✅ 已发布 |
-| music-tagger | 1.0.0 | 音乐文件批量标签工具 | 92 | ✅ 已发布 |
-| file-sorter | 1.0.0 | 通用文件智能分类工具 | 105 | ✅ 已发布 |
-| wechat-formatter | 1.0.0 | Markdown转公众号格式 | 15 | ✅ 已发布 |
-| social-publisher | 1.0.0 | 多平台内容发布工具 | 14 | ✅ 已发布 |
-| xiaohongshu-image-gen | 1.0.0 | 小红书图片生成工具 | 21 | ✅ 已发布 |
-| xiaohongshu-proxy-manager | 1.0.0 | 多账号代理池管理 | 19 | ✅ 已发布 |
-| image-optimizer-tool | 1.0.0 | 图片压缩与优化工具 | 0 | ✅ 已发布 |
-| data-chart-tool | 1.0.0 | 数据图表生成工具 | - | ✅ 已发布 |
-| auto-subtitle | 1.0.0 | 视频自动字幕生成器 | 0 | ✅ 已发布 |
-| audio-note-taker | 1.0.1 | 语音转文字会议纪要 | 0 | ✅ 已发布 |
-| content-researcher | 1.0.0 | 内容调研助手 | 0 | ✅ 已发布 |
-| ai-meeting-helper | 1.0.0 | 会议录音转结构化纪要 | 0 | ✅ 已发布 |
-| ai-content-tailor | 1.0.0 | 多平台内容裁剪工具 | 0 | ✅ 已发布 |
-| text-to-podcast | 1.0.0 | 文本转播客音频 | 0 | ✅ 已发布 |
-| skill-composer | 1.0.0 | 技能工作流编排器 | 0 | ✅ 已发布 |
+| batch-renamer | 1.0.0 | 批量文件重命名工具 | 176 | ✅ 已发布 |
+| photo-organizer | 1.0.0 | 照片批量整理工具 | 197 | ✅ 已发布 |
+| download-organizer | 1.0.0 | 下载文件自动分类工具 | 183 | ✅ 已发布 |
+| video-organizer | 1.0.0 | 视频批量重命名和整理工具 | 121 | ✅ 已发布 |
+| music-tagger | 1.0.0 | 音乐文件批量标签工具 | 116 | ✅ 已发布 |
+| file-sorter | 1.0.0 | 通用文件智能分类工具 | 140 | ✅ 已发布 |
+| wechat-formatter | 1.0.0 | Markdown转公众号格式 | 56 | ✅ 已发布 |
+| social-publisher | 1.0.0 | 多平台内容发布工具 | 60 | ✅ 已发布 |
+| xiaohongshu-image-gen | 1.0.0 | 小红书图片生成工具 | 59 | ✅ 已发布 |
+| xiaohongshu-proxy-manager | 1.0.0 | 多账号代理池管理 | 50 | ✅ 已发布 |
+| image-optimizer-tool | 1.0.0 | 图片压缩与优化工具 | 63 | ✅ 已发布 |
+| data-chart-tool | 1.0.0 | 数据图表生成工具 | 68 | ✅ 已发布 |
+| auto-subtitle | 1.0.0 | 视频自动字幕生成器 | 54 | ✅ 已发布 |
+| audio-note-taker | 1.0.1 | 语音转文字会议纪要 | 54 | ✅ 已发布 |
+| content-researcher | 1.0.0 | 内容调研助手 | 50 | ✅ 已发布 |
+| ai-meeting-helper | 1.0.0 | 会议录音转结构化纪要 | 47 | ✅ 已发布 |
+| ai-content-tailor | 1.0.0 | 多平台内容裁剪工具 | 47 | ✅ 已发布 |
+| text-to-podcast | 1.0.0 | 文本转播客音频 | 41 | ✅ 已发布 |
+| skill-composer | 1.0.0 | 技能工作流编排器 | 43 | ✅ 已发布 |
 
 **总下载量**：约 830+ 次（不含 tushare-finance）
 
