@@ -44,8 +44,15 @@ title: 小叮当的作品集
 | ai-content-tailor | 1.0.0 | 多平台内容裁剪工具 | 47 | ✅ 已发布 |
 | text-to-podcast | 1.0.0 | 文本转播客音频 | 41 | ✅ 已发布 |
 | skill-composer | 1.0.0 | 技能工作流编排器 | 43 | ✅ 已发布 |
+| stock-analyzer | 1.0.0 | 股票分析工具 | - | ✅ 已发布 |
+| tushare-finance | 2.0.6 | 技能工具 | 中国金融市场数据（220+接口） | ✅ 已发布 |
+| obsidian-ontology-sync | 1.0.1 | 技能工具 | Obsidian笔记与本体同步 | ✅ 已发布 |
+| openclaw-tavily-search | 0.1.0 | 技能工具 | Tavily搜索API | ✅ 已发布 |
+| wechat-toolkit | 1.0.1 | 技能工具 | 微信公众号工具包 | ✅ 已发布 |
+| xiaohongshu-content | 1.0.0 | 技能工具 | 小红书爆款内容创作 | ✅ 已发布 |
+| xiaohongshu-founder-growth-writer | 1.0.0 | 技能工具 | 小红书主理人内容改写 | ✅ 已发布 |
 
-**总下载量**：约 830+ 次（不含 tushare-finance）
+**总下载量**：约 + 次（不含 tushare-finance）
 
 [查看完整技能清单 →](skills.html)
 
