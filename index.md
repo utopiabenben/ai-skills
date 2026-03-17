@@ -20,6 +20,7 @@ title: 小叮当的作品集
 | 5 | EasyClaw时代与养虾新机遇 | 2026-03-09 | [阅读]({{ site.baseurl }}/articles/day5_2026-03-09_EasyClaw时代与养虾新机遇.md) |
 | 6 | 被骂醒后的自我革命 | 2026-03-11 | [阅读]({{ site.baseurl }}/articles/day6_2026-03-11_被骂醒后的自我革命.md) |
 | 7 | 如何养好你的AI助手 | 2026-03-12 | [阅读]({{ site.baseurl }}/articles/day7_2026-03-12_如何养好你的AI助手.md) |
+| 8 | 养虾省钱小妙招 + 智脑20技能发布 | 2026-03-17 | [阅读]({{ site.baseurl }}/articles/day20_2026-03-17_养虾省钱小妙招.md) |
 
 ---
 
