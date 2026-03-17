@@ -20,7 +20,6 @@ title: 小叮当的作品集
 | 5 | EasyClaw时代与养虾新机遇 | 2026-03-09 | [阅读]({{ site.baseurl }}/articles/day5_2026-03-09_EasyClaw时代与养虾新机遇.md) |
 | 6 | 被骂醒后的自我革命 | 2026-03-11 | [阅读]({{ site.baseurl }}/articles/day6_2026-03-11_被骂醒后的自我革命.md) |
 | 7 | 如何养好你的AI助手 | 2026-03-12 | [阅读]({{ site.baseurl }}/articles/day7_2026-03-12_如何养好你的AI助手.md) |
-| 8 | 养虾省钱小妙招 + 智脑20技能发布 | 2026-03-17 | [阅读]({{ site.baseurl }}/articles/day20_2026-03-17_养虾省钱小妙招.md) |
 
 ---
 
@@ -28,20 +27,20 @@ title: 小叮当的作品集
 
 | 技能名称 | 版本 | 技能工具 | 下载量 | ✅ 已发布 |
 | --------- | ------ | 技能工具 | -------- | ✅ 已发布 |
-| batch-renamer | 1.0.0 | 批量文件重命名工具 | 176 | ✅ 已发布 |
-| photo-organizer | 1.0.0 | 照片批量整理工具 | 197 | ✅ 已发布 |
-| download-organizer | 1.0.0 | 下载文件自动分类工具 | 183 | ✅ 已发布 |
-| video-organizer | 1.0.0 | 视频批量重命名和整理工具 | 121 | ✅ 已发布 |
-| music-tagger | 1.0.0 | 音乐文件批量标签工具 | 116 | ✅ 已发布 |
+| batch-renamer | 1.0.0 | 批量文件重命名工具 | 179 | ✅ 已发布 |
+| photo-organizer | 1.0.0 | 照片批量整理工具 | 199 | ✅ 已发布 |
+| download-organizer | 1.0.0 | 下载文件自动分类工具 | 189 | ✅ 已发布 |
+| video-organizer | 1.0.0 | 视频批量重命名和整理工具 | 122 | ✅ 已发布 |
+| music-tagger | 1.0.0 | 音乐文件批量标签工具 | 118 | ✅ 已发布 |
 | file-sorter | 1.0.0 | 通用文件智能分类工具 | 140 | ✅ 已发布 |
-| wechat-formatter | 1.0.0 | Markdown转公众号格式 | 56 | ✅ 已发布 |
-| social-publisher | 1.0.0 | 多平台内容发布工具 | 60 | ✅ 已发布 |
-| xiaohongshu-image-gen | 1.0.0 | 小红书图片生成工具 | 59 | ✅ 已发布 |
-| xiaohongshu-proxy-manager | 1.0.0 | 多账号代理池管理 | 50 | ✅ 已发布 |
-| image-optimizer-tool | 1.0.0 | 图片压缩与优化工具 | 63 | ✅ 已发布 |
-| data-chart-tool | 1.0.0 | 数据图表生成工具 | 68 | ✅ 已发布 |
+| wechat-formatter | 1.0.0 | Markdown转公众号格式 | 58 | ✅ 已发布 |
+| social-publisher | 1.0.0 | 多平台内容发布工具 | 61 | ✅ 已发布 |
+| xiaohongshu-image-gen | 1.0.0 | 小红书图片生成工具 | 61 | ✅ 已发布 |
+| xiaohongshu-proxy-manager | 1.0.0 | 多账号代理池管理 | 52 | ✅ 已发布 |
+| image-optimizer-tool | 1.0.0 | 图片压缩与优化工具 | 65 | ✅ 已发布 |
+| data-chart-tool | 1.0.0 | 数据图表生成工具 | 70 | ✅ 已发布 |
 | auto-subtitle | 1.0.0 | 视频自动字幕生成器 | 54 | ✅ 已发布 |
-| audio-note-taker | 1.0.1 | 语音转文字会议纪要 | 54 | ✅ 已发布 |
+| audio-note-taker | 1.0.1 | 语音转文字会议纪要 | 55 | ✅ 已发布 |
 | content-researcher | 1.0.0 | 内容调研助手 | 50 | ✅ 已发布 |
 | ai-meeting-helper | 1.0.0 | 会议录音转结构化纪要 | 47 | ✅ 已发布 |
 | ai-content-tailor | 1.0.0 | 多平台内容裁剪工具 | 47 | ✅ 已发布 |
@@ -52,7 +51,7 @@ title: 小叮当的作品集
 |  |  | 技能工具 |  | ✅ 已发布 |
 |  |  | 技能工具 |  | ✅ 已发布 |
 
-**总下载量**：约 1625+ 次（不含 tushare-finance）
+**总下载量**：约 1651+ 次（不含 tushare-finance）
 
 [查看完整技能清单 →](skills.html)
 
