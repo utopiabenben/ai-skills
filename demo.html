@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>技能演示（验证页）</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --border: rgba(255,255,255,0.12);
+      --accent: #7c3aed;
+      --good: #22c55e;
+      --warn: #f59e0b;
+    }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(124,58,237,0.25), transparent 60%),
+                  radial-gradient(1000px 500px at 90% 10%, rgba(34,197,94,0.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .title h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.2px;
+    }
+    .title .sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+    }
+    .nav a:hover { border-color: rgba(255,255,255,0.24); color: var(--text); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 16px;
+    }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .card .hd {
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,0.02);
+    }
+    .card .hd .h {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .card .bd { padding: 14px; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 160px 160px;
+      gap: 10px;
+    }
+    @media (max-width: 680px) {
+      .controls { grid-template-columns: 1fr; }
+    }
+    input, select, button {
+      color: var(--text);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      outline: none;
+      font-size: 14px;
+    }
+    input::placeholder { color: rgba(255,255,255,0.45); }
+    button {
+      cursor: pointer;
+      background: linear-gradient(180deg, rgba(124,58,237,0.35), rgba(124,58,237,0.18));
+      border-color: rgba(124,58,237,0.45);
+    }
+    button:hover { border-color: rgba(124,58,237,0.75); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .pill strong { color: var(--text); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid rgba(255,255,255,0.10); }
+    th { color: rgba(255,255,255,0.72); font-weight: 600; background: rgba(255,255,255,0.02); position: sticky; top: 0; }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+    .row-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.78);
+    }
+    .badge.good { border-color: rgba(34,197,94,0.45); background: rgba(34,197,94,0.10); }
+    .badge.warn { border-color: rgba(245,158,11,0.50); background: rgba(245,158,11,0.10); }
+
+    .kvs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kv {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .kv .k { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .kv .v { font-weight: 700; font-size: 15px; }
+    .muted { color: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    .toast {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.82);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>🧪 技能演示（验证页）</h1>
+        <div class="sub">GitHub Pages 可直接访问，不依赖 <span class="mono">localhost</span></div>
+      </div>
+      <div class="nav">
+        <a href="./">返回主页</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <div class="h">技能列表（可搜索/排序/点选查看）</div>
+          <div id="stats-pills" class="pill">加载中…</div>
+        </div>
+        <div class="bd">
+          <div class="controls">
+            <input id="q" placeholder="搜索：技能名 / 中文描述" />
+            <select id="sort">
+              <option value="downloads_desc">按下载量 ↓</option>
+              <option value="downloads_asc">按下载量 ↑</option>
+              <option value="name_asc">按名称 A→Z</option>
+              <option value="name_desc">按名称 Z→A</option>
+            </select>
+            <button id="reset" type="button">重置</button>
+          </div>
+
+          <div style="height: 12px"></div>
+
+          <div style="max-height: 520px; overflow: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.10);">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 28%">技能</th>
+                  <th style="width: 10%">版本</th>
+                  <th>中文描述</th>
+                  <th style="width: 12%">下载量</th>
+                  <th style="width: 14%">状态</th>
+                </tr>
+              </thead>
+              <tbody id="tbody">
+                <tr><td colspan="5" class="muted">正在加载数据…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="hint" class="toast muted">提示：这页的全部数据来自 <span class="mono">data/site-data.json</span>，更新 JSON 后无需改页面。</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <div class="h">验证面板（选中一条技能）</div>
+          <span id="badge" class="badge warn">未选择</span>
+        </div>
+        <div class="bd">
+          <div class="kvs">
+            <div class="kv">
+              <div class="k">技能名称</div>
+              <div id="d-name" class="v muted">-</div>
+            </div>
+            <div class="kv">
+              <div class="k">版本</div>
+              <div id="d-version" class="v muted">-</div>
+            </div>
+            <div class="kv" style="grid-column: 1 / -1;">
+              <div class="k">中文描述</div>
+              <div id="d-desc" class="v muted">-</div>
+            </div>
+            <div class="kv">
+              <div class="k">下载量</div>
+              <div id="d-dl" class="v muted">-</div>
+            </div>
+            <div class="kv">
+              <div class="k">状态</div>
+              <div id="d-status" class="v muted">-</div>
+            </div>
+          </div>
+
+          <div style="height: 12px"></div>
+
+          <div class="toast">
+            <div style="font-weight: 700; margin-bottom: 6px;">如何“验证”这个技能？（演示版）</div>
+            <div class="muted">
+              - 这页仅做展示与筛选，不访问任何本地端口。<br>
+              - 真正的自动验证（安装/运行/截图）建议放到服务器任务里跑，再把结果写回 JSON。<br>
+              - 你可以把验证结果字段（如 lastCheck/health）加进 JSON，这页会继续扩展展示。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadData() {
+      const res = await fetch('./data/site-data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('无法加载 data/site-data.json（请确认文件已提交到仓库）');
+      return res.json();
+    }
+
+    function norm(v) {
+      return String(v ?? '').toLowerCase();
+    }
+
+    function safeDownloads(v) {
+      return typeof v === 'number' ? v : null;
+    }
+
+    function renderStats(skills) {
+      const total = skills.reduce((s, it) => s + (safeDownloads(it.downloads) ?? 0), 0);
+      const known = skills.filter(it => typeof it.downloads === 'number').length;
+      const el = document.getElementById('stats-pills');
+      el.innerHTML = `技能 <strong>${skills.length}</strong> · 总下载 <strong>${total}+</strong> · 已统计 <strong>${known}</strong>`;
+    }
+
+    function sortSkills(items, mode) {
+      const copy = [...items];
+      if (mode === 'name_asc') return copy.sort((a, b) => norm(a.name).localeCompare(norm(b.name)));
+      if (mode === 'name_desc') return copy.sort((a, b) => norm(b.name).localeCompare(norm(a.name)));
+      if (mode === 'downloads_asc') return copy.sort((a, b) => (safeDownloads(a.downloads) ?? -1) - (safeDownloads(b.downloads) ?? -1));
+      return copy.sort((a, b) => (safeDownloads(b.downloads) ?? -1) - (safeDownloads(a.downloads) ?? -1));
+    }
+
+    function filterSkills(items, q) {
+      const query = norm(q).trim();
+      if (!query) return items;
+      return items.filter(it => norm(it.name).includes(query) || norm(it.description).includes(query));
+    }
+
+    function renderTable(items, onPick) {
+      const tbody = document.getElementById('tbody');
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="muted">没有匹配结果</td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map((it, idx) => {
+        const dl = safeDownloads(it.downloads);
+        const dlText = dl === null ? '-' : String(dl);
+        return `
+          <tr>
+            <td><button class="row-btn" data-idx="${idx}">${it.name}</button></td>
+            <td class="muted">${it.version}</td>
+            <td>${it.description}</td>
+            <td class="muted">${dlText}</td>
+            <td><span class="badge good">✅ ${it.status ?? '已发布'}</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('button[data-idx]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-idx'));
+          onPick(items[idx]);
+        });
+      });
+    }
+
+    function setDetail(skill) {
+      const badge = document.getElementById('badge');
+      if (!skill) {
+        badge.className = 'badge warn';
+        badge.textContent = '未选择';
+        return;
+      }
+      badge.className = 'badge good';
+      badge.textContent = '已选择';
+
+      const dl = safeDownloads(skill.downloads);
+      document.getElementById('d-name').textContent = skill.name ?? '-';
+      document.getElementById('d-version').textContent = skill.version ?? '-';
+      document.getElementById('d-desc').textContent = skill.description ?? '-';
+      document.getElementById('d-dl').textContent = dl === null ? '-' : String(dl);
+      document.getElementById('d-status').textContent = skill.status ?? '已发布';
+    }
+
+    async function main() {
+      const q = document.getElementById('q');
+      const sort = document.getElementById('sort');
+      const reset = document.getElementById('reset');
+      const hint = document.getElementById('hint');
+
+      try {
+        const data = await loadData();
+        const skills = Array.isArray(data.skills) ? data.skills : [];
+        renderStats(skills);
+
+        const state = { skills, picked: null };
+
+        const apply = () => {
+          const filtered = filterSkills(state.skills, q.value);
+          const sorted = sortSkills(filtered, sort.value);
+          renderTable(sorted, (picked) => {
+            state.picked = picked;
+            setDetail(picked);
+          });
+        };
+
+        q.addEventListener('input', apply);
+        sort.addEventListener('change', apply);
+        reset.addEventListener('click', () => {
+          q.value = '';
+          sort.value = 'downloads_desc';
+          setDetail(null);
+          apply();
+        });
+
+        hint.classList.remove('muted');
+        hint.innerHTML = '提示：这页的全部数据来自 <span class="mono">data/site-data.json</span>（动态读取），更新 JSON 后页面自动更新。';
+
+        apply();
+      } catch (e) {
+        document.getElementById('tbody').innerHTML = `<tr><td colspan="5">${e.message}</td></tr>`;
+        document.getElementById('stats-pills').textContent = '加载失败';
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
+
