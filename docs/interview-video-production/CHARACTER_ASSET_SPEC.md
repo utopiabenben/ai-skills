@@ -1,0 +1,3 @@
+# Character Asset Spec
+
+Placeholder
