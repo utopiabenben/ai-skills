@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "rigby2d": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/ABSOLUTE/PATH/TO/rigby2d/src/mcp/server.js",
+        "--root",
+        "/ABSOLUTE/PATH/TO/InterviewVideo"
+      ]
+    }
+  }
+}
