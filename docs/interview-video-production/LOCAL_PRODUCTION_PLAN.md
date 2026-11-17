@@ -1,445 +1,452 @@
-# 彦泽 × 张岚｜双人动漫访谈视频本地制作技术方案 V1.0
+# 彦泽 × 张岚｜本地动漫访谈视频制作方案 V2
 
-**制定日期**：2026-11-17  
-**交付状态**：技术设计与选型；尚未在用户 Mac mini 上完成端到端运行验证  
-**执行角色**：Codex（总控/工程）、素材与动画制作模块、WorkBuddy（审核）、彦泽（内容与最终验收）  
-**设备基线**：Mac mini M4 / 32 GB 统一内存；优先本地处理及存储，可使用外置 APFS 磁盘。  
-**输入基线**：先使用已录制的约 58 分钟访谈进行验证；同样适用于后续约 60 分钟的自然聊天。  
-**目标输出**：约 30 分钟、16:9、1920×1080、30 fps、MP4（H.264 + AAC）、可编辑项目；并可另出短视频及独立 SRT 字幕。
+**确定方向：** 半写实日系动漫；Rigby2D 骨骼动画 + 动态漫画 + AI 插画。  
+**执行工具：** Cursor + Rigby2D MCP + HyperFrames Skills + FFmpeg。  
+**设备：** Mac mini M4 / 32GB 统一内存。  
+**声音：** 使用真实访谈原声，不合成声音替代。  
+**目标：** 约30分钟、16:9、1920×1080、30fps、MP4/H.264/AAC。  
+**状态：** 设计方案，需在本机逐关验证；没有任何阶段预先标记为已通过。
 
 ---
 
-## 0. 产品目标与不可妥协条件
+## 1. 方向决策与本次技术调整
 
-1. **保留真人原声与真实经历**。原访谈是事实来源；剪辑允许删掉无关段落、重复和无效停顿，但不得替换、拼接出原说话人未表达的观点；不得未经明确授权以合成声音冒充真实采访。
-2. **动漫人物连续一致**。主持彦泽：棕色束发/盘发、白色外套，主持手持麦克风，全画面中主持话筒只能有一个。嘉宾张岚：黑色短发、黄色带熊猫图案上衣、彩色围巾/工牌，桌面麦克风。两人坐姿方向互相面对，统一画风、照明、服装、脸型、比例。
-3. **真实口型同步优先**。不采用仅按音频响度驱动开合口的方案作为“准确口型”验收版本。要求可追溯的中文对齐数据，并逐镜头验收。
-4. **适当自然动作**。非发言人闭口并有自然聆听反应；说话人有口型、眨眼、视线、头部轻微动作和少量手势。避免机械重复或“每句话都点头”。
-5. **素材分层与项目可复用**。角色模型、声音、字幕、镜头编排分开；一次修改不导致其他章节全部重制。
-6. **以可看完的访谈为准**。内容剪辑与节奏优先于技术炫技；B-roll 服务于真实故事；不用自动生成画面伪装历史现场实拍。
-7. **商业用途前核查权利**。本人声音肖像、受访者授权、图片模型权重、素材音乐、字体、软件许可分别核查，不将仓库 MIT 许可证简单理解为模型权重或第三方素材都可商用。
+### 1.1 已确认的制作方向
 
-## 1. 技术选型与总体架构
+- **人物画风：半写实日系动漫。** 两人都采用成年人物正常比例，统一头身比例、线稿、上色、光影和细节密度。
+- **主制作模式：骨骼动画。** 两位角色分别建立可复用 Rig，完成口型、眼神、表情、头部、肩颈和手臂动作。
+- **辅助模式：动态漫画。** 访谈讲到故事、经历、地点、业务流程时，切换插画分镜、推拉摇移、景深视差和信息图。
+- **辅助素材：AI 插画。** 用于地点、旅行场景、物件、环境、流程示意；主角人物尽量复用固定 Rig，避免 AI 每张图重新画脸。
+- **最终剪辑：HyperFrames。** 编排 Rigby2D 输出片段、动态漫画、AI 插画、字幕、章节卡、音效和音乐。
 
-### 1.1 推荐路线：可规模化的本地 2.5D 动画
+### 1.2 对旧方案的修正
 
-```
-原始访谈视频 + 逐字稿 + 人物参考图
-          |
-          v
-[音轨保全] FFmpeg / 本地 WAV 母带
-          |
-          v
-[转写/说话人] whisper.cpp + 校对 + 分段 speaker_id
-          |
-          v
-[内容剪辑] story beats / EDL / final_audio.wav (先锁声音)
-          |
-          +--> [MFA 普通话音素强制对齐] -> viseme.json -> 两套角色 Rig
-          |                                           |
-          +--> [人物设计/表情/动作/场景] -----------> [2D 动画输出]
-          |                                           |
-          +--> [插图/资料镜头/图表] -----------------+
-                                                      |
-                                                      v
-[HyperFrames] 镜头编辑 + 说话人切镜 + 中文字幕 + 音乐 + 图文覆盖
-                                                      |
-                                                      v
-[FFmpeg / DaVinci Resolve] 章节精修、声画审核、H.264 导出
-                                                      |
-                                                      v
-30分钟主片 + SRT + 精华切片 + 封面 + 可编辑工程 + 知识库时间戳
-```
+旧方案把 MFA 作为中文口型的必选项，并把 HyperFrames 当作主要动画引擎。V2 调整为：
 
-**为什么选择**：30 分钟的视频需要大量可重复镜头，2D Rig 能维持人物一致性，也能保持本地离线制作。语音与动画解耦，修改字幕、镜头和角色动作不必重算全部 AI 视频。
+1. Rigby2D 原生支持本地 Whisper 自动转写，语言选项包含 Chinese；支持从词语时间、Whisper word-timing JSON 等输入生成九类 viseme。
+2. 第一轮先测 Rigby2D 原生 Chinese transcription；如果时间戳或口型质量不足，再使用外部 Whisper word-timing JSON。MFA 仅作为有明确失败证据时的备选，不设为必装依赖。
+3. Rigby2D 本身已有 Film workspace、双角色 Scene、镜头相机、背景视差和 MP4/WebM/PNG 渲染。主角色动画优先由 Rigby2D 完成。
+4. Rigby2D MCP 可通过 Cursor 调用；MCP 能编辑、验证、加音轨和生成口型，但不能直接渲染 MP4/WebM/PNG，最终渲染需要打开编辑器执行。
+5. HyperFrames 负责动态漫画和最终节目时间线，不再用 HTML/CSS 贴图方式替代角色骨骼动画。
 
-### 1.2 三个口型方案的边界
+---
 
-| 方案 | 设备/成熟度 | 真实中文原声 | 项目定位 |
-|---|---|---|---|
-| **A. MFA 中文音素对齐 + viseme 映射 + 2D Rig** | 本地可研发；需要分层口型及开发 | 支持；手动纠错不可免 | **主路线**，优先试做 |
-| **B. Adobe Character Animator 预录语音自动 lip sync** | Mac 上的成熟角色动画工具；可能涉及付费订阅 | 可导入 WAV 计算 viseme；中文准确度须现场验证 | **比较方案**，如果优于 A 且商业许可合适可换用 |
-| **C. Rhubarb Lip Sync `phonetic` 模式** | 免费工具，跨语言但识别精度通常低于英语模式 | 支持非英语基础口型，但中文效果需要测试 | 仅用于 10 秒比较/快速基线，不直接验收整片 |
+## 2. 工具分工
 
-注意：Live2D Cubism 普通 LipSync 主要按音量控制 `ParamMouthOpenY`；单独使用不符合本项目的口型标准。若采用 Live2D，必须额外使用音素事件驱动 `MouthForm` / 多口型形变并人工测试。Live2D 模型制作及 SDK 许可需另核查。
-
-### 1.3 AI 全生成选项，限短镜头验证
-
-- **Mac 本地 LTX-2 MLX**：对短镜头探索 `a2v` 等音频驱动能力；官方项目对部分路径标注 Experimental，不能直接作为 30 分钟必达方案。优先 q4/q8、`--low-ram`、短片/低分辨率试跑。短镜头必须验证原声保持、脸部一致、口型与声音同步、渲染时长及内存峰值。
-- **`lip-sync-mac`**：Apple Silicon 实验仓库，使用 Qwen3-TTS 生成语音再配合 LTX-2.3；对“必须保留会议原声”并不天然匹配，不能直接替代主链路。
-- **LongCat Avatar 1.6**：支持多人音频驱动，但官方推理依赖 NVIDIA CUDA。需要远程 GPU 才有条件运行，不计入“Mac 本地完整生产”的默认路线；仅在另行授权云计算费用及素材上传之后尝试。
-- **不作承诺**：上述模型并未在用户 M4 32 GB 的具体环境进行过双人动漫+中文原声 30 分钟端到端验证。
-
-## 2. 工作分工
-
-| 角色 | 职责 | 审核权 |
+| 工具 | 主要职责 | 是否主链路 |
 |---|---|---|
-| 彦泽 | 主题、人物审定、内容删减、原声/表达、最终画面与发布 | P0 内容、最后验收 |
-| Codex | 任务拆解、软件检测、素材规范、脚本与接口、构建/渲染、QA 归档 | 技术流程负责人 |
-| Cursor（按需） | 角色渲染器、时间线/数据结构、代码修改 | 代码交付/测试 |
-| WorkBuddy（按需） | 逐字稿审核、内容章节、质量检查报告、知识库提取 | 辅助复审，不能替代耳听/眼看 |
-| 动画/设计模块 | 角色定稿、PSD/PNG 分层、口型、表情和场景设计 | 视觉资产 |
-
-不假设 Codex/WorkBuddy 能自行操作某个未连接的软件；优先调用可用 CLI/API，缺少工具时输出可执行说明、失败原因与待人工操作清单。
-
-## 3. 工具、Skill 清单（按需要安装，不全部叠加）
-
-| 类型 | 产品/Skill | 目的 | 成本/要求 |
-|---|---|---|---|
-| 基础必需 | FFmpeg / FFprobe | 转码、音轨、媒体诊断、输出 | 开源；本地 |
-| 基础必需 | Python 3.11+ / `uv` | 转写、对齐解析、QA 脚本 | 免费 |
-| 基础必需 | Node.js 22+ | HyperFrames CLI | 免费 |
-| 语音 | `ggml-org/whisper.cpp` | 中文转写、时间戳，Apple Silicon Metal | 本地免费；需模型权重 |
-| 语音精对齐 | Montreal Forced Aligner | `mandarin_mfa` 音素时间、TextGrid | 本地；初装较重，语料准备复杂 |
-| 快速口型比较 | `DanielSWolf/rhubarb-lip-sync` | 2D mouth cue JSON；`phonetic` 备选 | 免费，中文需测 |
-| 口型商业备选 | Adobe Character Animator | 多 viseme 口型、表情及动作 | 商业订阅及授权需检查 |
-| 本地图片生成 | `mflux-community/mflux` | 背景和 B-roll 原画，资产落本地 | 免费运行，模型需下载 |
-| 人物分层 | Krita / Photoshop / 图像编辑 | 抠图、图层分离、口型绘制 | Krita 免费，PS 付费 |
-| 角色 Rig | 自定义 Canvas/WebGL 2D 渲染器 或 Live2D Cubism | 姿态、口型、动画 | 自建；Live2D 授权另核查 |
-| 视频合成 | HyperFrames `/hyperframes` | 整片时间线/场景规范 | 可本地渲染 |
-| 视频命令 | `/hyperframes-cli` | 初始化、lint、check、snapshot、render | Node 22+、FFmpeg |
-| 视频素材 | `/media-use` | 素材接入、字幕、音效、音频混合 | 选择本地源；付费服务要授权 |
-| 视频组件 | `/hyperframes-registry` | 标题、章节、字幕、转场 | 可复用组件 |
-| 可选 Skill | `/style-sampling` | 统一风格（若支持且安装） | 仅风格参考需要时 |
-| 可选 Skill | `/reverse-any-video` | 从既有成片重建时间线 | 可能需要 Pro；本项目默认不用 |
-| 精修 | DaVinci Resolve | 精修音画/片头片尾/最终审片 | 免费版/Studio 需核实功能差异 |
-| 项目复用 | OpenTimelineIO（可选） | 跨编辑器表达剪辑时间线 | 需测试编辑器适配器 |
-
-**HyperFrames 官方 Skills 安装**：`npx skills add heygen-com/hyperframes`，优先选择 `/hyperframes`、`/hyperframes-cli`、`/media-use`、`/hyperframes-registry`。Skill 指导时间线和渲染，**不会自动提供**符合中文音素要求的专用神经口型模型。
-
-**需要自行开发的项目 Skills**（名字为本方案拟定，当前不宣称已安装）：
-
-- `interview-transcript-editor`：保真剪辑；给出 original_start/end、speaker、审定文本、保留原因；不能自动杜撰句子。
-- `speaker-audio-qa`：两人音轨归属、错位/重叠、爆音/噪声/音质、源音比对。
-- `mandarin-viseme-align`：MFA 音素→viseme、口型曲线、失败标记和可人工修改的数据。
-- `avatar-continuity-qa`：脸、服装、颜色、话筒、视线、场景一致性。
-- `podcast-shot-editor`：根据发言时序与故事节点生成切镜/资料镜头时间线。
-- `video-release-qa`：视频帧、音画同步、字幕、黑帧、导出参数、完整性报告。
-- 可选 `interview-knowledge-miner`：将同一时间戳的采访内容用于知识库/Skill 候选，**与视频制作流程相互独立**。
-
-各 Skill 应包含 `SKILL.md`、输入/输出契约、脚本、示例和测试用例；不得仅放一个提示词便声称“已实现自动化”。
-
-## 4. 素材目录与数据契约
-
-使用英文 ASCII 文件名，原始素材只读。建议工程位于外置 APFS 盘高速目录（路径由用户选择），**不能擅自移动 WorkBuddy/Codex Runtime**。
-
-```text
-InterviewVideo/
-├── 00_source/
-│   ├── interview_original.mp4       # 只读，保持 checksum
-│   ├── transcript_original.pdf
-│   └── permissions.md
-├── 01_audio/
-│   ├── original_master.wav          # 原声音频，不修音
-│   ├── asr_16k_mono.wav
-│   ├── host_dialogue.wav            # 根据精确剪辑时间线归集，其他部分静音
-│   ├── guest_dialogue.wav
-│   └── final_dialogue.wav           # 完成内容审定后的声音母带
-├── 02_transcript/
-│   ├── transcript_raw.json
-│   ├── transcript_checked.json
-│   ├── edit_decisions.json
-│   ├── segments.json
-│   └── final_subtitles.srt
-├── 03_characters/
-│   ├── host/{rig,mouth,eyes,expressions,poses}/
-│   ├── guest/{rig,mouth,eyes,expressions,poses}/
-│   ├── character_bible.md
-│   └── assets_manifest.json
-├── 04_scenes/
-│   ├── studio/
-│   ├── broll/
-│   ├── intro_outro/
-│   └── overlays/
-├── 05_alignment/
-│   ├── mfa_corpus/
-│   ├── textgrids/
-│   ├── host_visemes.json
-│   ├── guest_visemes.json
-│   └── alignment_review.csv
-├── 06_animation/
-│   ├── shot_host/
-│   ├── shot_guest/
-│   ├── shot_twoshot/
-│   └── clips_manifest.json
-├── 07_timeline/
-│   ├── editorial_timeline.json
-│   ├── shots.json
-│   └── hyperframes_project/
-├── 08_preview/
-│   ├── test_10s.mp4
-│   ├── test_60s.mp4
-│   └── test_5m.mp4
-├── 09_delivery/
-│   ├── episode_01_1080p.mp4
-│   ├── episode_01.srt
-│   ├── episode_01_cover.png
-│   ├── episode_01_vertical_highlights/
-│   └── release_report.md
-├── qa/
-│   ├── qa_report.json
-│   ├── qa_checklist.csv
-│   └── sample_review_notes.md
-└── scripts/
-    ├── preflight.py
-    ├── ingest.py
-    ├── align_visemes.py
-    ├── render_shots.py
-    ├── generate_timeline.py
-    └── qa_export.py
-```
-
-**基础素材清单（每个人物）**：
-
-- 统一角色三视图/近正面、3/4 左右侧，站/坐姿（与最终镜头角度协调）；角色比例固定。
-- 眼睛：睁眼、半闭、闭眼、微笑；嘴巴：闭合、MBP、F/V、a、o、e、i、u、ü、过渡形态等 **10–12 组**（最终以对齐模型实际音素映射评估）。
-- 眉毛：平静、认真、疑问、惊讶；手势：静止、解释、点头、轻手势 3–5 个可复用动作。
-- 透明分层：脸/头发/眼睛/口/身体/手臂/饰品/麦克风；不要让麦克风或嘴巴与主体绘死在一起。
-- 场景：双人演播间全景、主持中近景、嘉宾中近景、侧面相视、插图过渡等；所有中文文字用视频叠加排版，图片生成不承担正式文字。
-
-**渲染输入示例**：
-
-```json
-{
-  "segment_id": "seg_0042",
-  "speaker": "host",
-  "source_start_ms": 175800,
-  "source_end_ms": 180200,
-  "timeline_start_ms": 68400,
-  "timeline_end_ms": 72800,
-  "audio_path": "01_audio/final_dialogue.wav",
-  "mouth_cues_path": "05_alignment/host_visemes.json",
-  "shot": "host_medium",
-  "motion": "explain_subtle",
-  "subtitle_id": "srt_0042",
-  "source_text_verified": true
-}
-```
+| Rigby2D 0.5.1 | 分层角色 AutoRig、骨骼动画、viseme 口型、双人 Scene、相机、视差、视频渲染 | **是** |
+| Cursor | 调度 MCP、生成/检查工程文件、编写时间轴脚本、修复错误、调用 Skills | **是** |
+| Krita | 角色重绘、拆层、修补遮挡、绘制口型和表情 | **是** |
+| HyperFrames + Skills | 动态漫画、插画运镜、字幕、片头片尾、章节、总时间线、最终渲染 | **是** |
+| FFmpeg / FFprobe | 提取音轨、转码、合并、音量检查、黑帧和媒体信息检测 | **是** |
+| whisper.cpp / WhisperX | 逐字稿、词级时间戳、说话人段落辅助 | 按测试选用 |
+| MFLUX | 本地生成场景/物件/地点 AI 插画 | 可选 |
+| DaVinci Resolve | 复杂人工精修、最终声音微调 | 可选 |
+| Adobe Character Animator / Live2D | 对照测试，不作为当前主工程 | 暂不采用 |
+
+### 工具与版本基线
+
+- Rigby2D：先固定 0.5.1，升级前重新跑回归测试。
+- Rigby2D 官方下载提供 macOS universal DMG，支持 Apple Silicon；首次启动按官方安装说明处理 macOS Gatekeeper。
+- Rigby2D MCP 使用 Node.js 20+；HyperFrames CLI Skill 要求 Node.js 22+ 和 FFmpeg。项目统一使用 Node.js 22+。
+- HyperFrames Skills 使用 npx hyperframes skills update 安装/更新匹配当前 CLI 版本的核心 Skills。
+- 不登录 HeyGen，不使用收费云 API、云 GPU 或云渲染。AI 图片优先本地 MFLUX；本地能力不足时先报告，不自动转云端。
+
+---
+
+## 3. Rigby2D 在本项目中的角色
+
+### 3.1 它负责什么
+
+- 将分层 PSD、SVG 或同尺寸 PNG 图层导入。
+- AutoRig 自动识别身体部件，创建骨骼、网格和 IK。
+- 通过 mouth slot 的多种嘴型附件生成 viseme 口型。
+- 眼睛、瞳孔、眉毛、头部、手臂和头发建立独立控制。
+- Film workspace 里配置输出尺寸、帧率、背景、音轨和镜头。
+- Scene 中放入多个 Actor，各自播放角色动画片段；舞台有背景层、前景层、相机和视差。
+- 导出 MP4/H.264、WebM/VP9（支持透明）或 PNG 序列。
+
+### 3.2 它不负责什么
+
+- 不会把一张扁平人物图自动切成完整人体图层。
+- AutoRig 不能替代美术修补；关节、网格权重、遮挡和手部需要检查。
+- 不能仅靠九类通用 viseme 保证中文每个音素都完美；必须用真实普通话音频验收。
+- MCP 不提供最终视频渲染命令；需在 Rigby2D 编辑器中执行 File ▸ Render animation。
+- 不负责完整30分钟节目内容剪辑、知识点插图、复杂字幕包装和多平台版本管理。
+
+### 3.3 Rigby2D 项目组织
+
+建议一个角色一个 .rigby 工程，一个场景一个 .rigby 工程：
+
+    InterviewVideo/
+    ├── 00_source/
+    │   ├── original_video.mp4
+    │   ├── transcript_original.docx
+    │   └── permissions.md
+    ├── 01_audio/
+    │   ├── original_master.wav
+    │   ├── host_guide.wav
+    │   ├── guest_guide.wav
+    │   └── final_master.wav
+    ├── 02_character_art/
+    │   ├── host/host_layered.psd
+    │   ├── guest/guest_layered.psd
+    │   └── character_bible.md
+    ├── 03_rigby/
+    │   ├── host/host.rigby
+    │   ├── guest/guest.rigby
+    │   ├── scenes/studio_scene.rigby
+    │   └── poses/
+    ├── 04_timing/
+    │   ├── speaker_turns.json
+    │   ├── host_word_timing.json
+    │   ├── guest_word_timing.json
+    │   └── alignment_review.csv
+    ├── 05_illustrations/
+    │   ├── generated/
+    │   ├── approved/
+    │   └── source_ledger.json
+    ├── 06_hyperframes/
+    │   ├── index.html
+    │   ├── compositions/
+    │   ├── assets/
+    │   └── SPEC.md
+    ├── 07_preview/
+    ├── 08_delivery/
+    └── qa/
+
+原始视频和逐字稿只读；所有剪辑都必须能映射回原片时间戳。
+
+---
+
+## 4. 人物资产制作：从现有图到可动画角色
+
+### 4.1 现有图只作为外观参考
+
+当前彦泽参考图是偏半写实成年动漫；张岚参考图是 Q 版角色设定。两张图不能直接放到同一个场景中，也不能直接交给 AutoRig。
+
+必须重新设计张岚，使她与彦泽统一为半写实日系动漫、成年人物比例。彦泽也需制作适合坐姿访谈的完整角色资产，避免只用一张胸像硬拉成全身。
+
+### 4.2 人物视觉规范
+
+**彦泽（主持人）**
+- 保留棕色头发/束发、白色西装外套、深色内搭。
+- 成年女性比例，半写实日系动漫。
+- 坐姿朝画面右侧，主要视线落在张岚身上。
+- 手持一支主持麦克风；不得出现第二支主持麦克风、复制麦克风或悬浮麦克风。
+- 手指与麦克风接触关系自然；麦克风与手部绑定。
 
-`source_*` 必须保留原录音时间定位；`timeline_*` 表示剪辑后时间，二者通过 EDL 映射，不允许混用。示例中的时码为格式演示，非原片事实。
+**张岚（嘉宾/导游）**
+- 保留黑色短发、黄色服装、熊猫元素、彩色围巾/工牌。
+- 重新绘制为成年人物比例，不能保留 Q 版大头比例。
+- 坐姿朝画面左侧，主要视线落在彦泽身上。
+- 使用一支固定位置的桌面麦克风；不使用导游旗、扩音器等与访谈无关道具。
+- 说话和倾听表情自然。
 
-## 5. 逐阶段实施步骤 + 验收关卡
+**统一风格**
+- 统一头身比例、眼睛尺寸、线稿粗细、皮肤明暗、发丝细节、衣料质感、色彩饱和度和光源方向。
+- 半写实、干净、温暖、有电影感；避免幼儿绘本、Q 版、大眼娃娃风。
+- 主场景采用温暖的山景访谈空间，但人物必须与桌椅、光线、透视真正融合，不能像贴纸贴在背景上。
+- 画面内不得出现生成模型画出的乱码文字，所有标题字幕由 HyperFrames 文字层制作。
 
-### 阶段 P0：环境预检、授权和原始素材锁定
+### 4.3 分层 PSD 交付
 
-1. Codex 输出机器 CPU/内存、macOS、磁盘、外置盘格式及可用容量、已装软件版本报告。
-2. 检测 Node.js >=22、FFmpeg/FFprobe、Python/uv、Git、是否有 NVIDIA GPU（M4 没有 CUDA）、GPU 负载与磁盘速度。
-3. 确认参考图与原音存在，生成 SHA256，**不得覆盖**原件。
-4. 记录受访者允许的公开使用、形象改绘、声音使用、知识库采集和商业使用范围；敏感材料默认本地。
-5. 先基准测试 10 秒素材，给出渲染和内存数据，再决定整片任务分批大小。
+AutoRig 需要分层 PSD/SVG/同尺寸 PNG；它不会拆解一张扁平图。分层命名和拆分要求见 CHARACTER_ASSET_SPEC.md。
 
-**验收 G0**：机器和依赖清单已生成；原文件可读取且有校验值；权限边界明确；若缺素材或无法读取，流程停止并准确报告。
+每个人物至少准备：
+- 面部、头、脖子、躯干、骨盆。
+- 左右上臂、前臂、手掌。
+- 后发、前发、刘海。
+- 左右眼白、瞳孔、眼睑、眉毛。
+- 鼻子、下颌/嘴部区域。
+- 口型附件：A、E、I、O、U、MBP、FV、L、rest；优先确保 MBP、A、O 清晰。
+- 表情附件：微笑、认真、疑问、惊讶、思考、笑。
+- 道具：麦克风、耳饰、围巾、工牌等独立图层。
 
-### 阶段 P1：声音母带和内容粗剪
-
-1. `FFmpeg` 抽取原声 48 kHz WAV 母带（原始若为压缩音频，转 WAV 不能恢复丢失频率）。另抽取 16 kHz mono 用于识别。
-2. `whisper.cpp` 生成中文转写，保留原时间戳；人物说话人识别需与原视频/会议录音交叉人工确认。注意原文件存在少量第三者说话与重叠的可能，不能强行全归给两位主角。
-3. 给每段语音标注 `speaker_id, start, end, text, topic, include, reason`，按主题形成 30 分钟的内容大纲。
-4. 先做 **纯声音粗剪**：保留自然停顿、故事铺陈、反应声；清理超长静默/确实无效的语气重复，剪点采用短交叉淡化，避免音节被切掉。
-5. 禁止使用可能改变音色的过强降噪、自动配音或变声；输出未处理原声与轻处理版 AB 对照，以用户听感为准。
-6. 锁定最终内容（30分钟为目标区间，可围绕节目节奏调整），为每个最终片段建立 `final_audio ↔ source_timestamp` 映射。
+每个图层必须同画布尺寸、透明背景、锚点一致。需要遮挡修补，不能只把整张人物抠成一张 PNG。
 
-**验收 G1**：两人归属经人工复查；没有拼出原声不存在的话；关键情绪/转折未被删断；所有剪点听起来流畅；`final_dialogue.wav` 时间码固定后才进入口型制作。
+---
 
-### 阶段 P2：角色素材生成与动画 Rig
+## 5. Rigby2D 安装与 Cursor MCP
 
-1. 从现有彦泽/张岚参考图建立 `character_bible.md`，锁定头发、服装、主色、工牌、话筒、角色比例、镜头方向。
-2. 先出场景、正面/3/4面人物、单人近景和双人全景；再制作角色分层 PSD / 透明 PNG；无正式字幕文字。
-3. 根据音素映射制作每人 10–12 类嘴型/过渡形态，按角色图层坐标校准；小表情（眨眼、眉毛、视线）及3–5个身体动作单独导出。
-4. 建立角色 Rig 渲染器：每帧读取时间戳，取说话人状态、嘴型、眼睛、头部和手势轨道，输出 RGBA 动画流或背景合成视频。
-5. 双人互视：单人镜头可以略朝画内另一位；嘉宾发言时主持朝嘉宾，主持发言时嘉宾朝主持；避免双人永远正看镜头。
+### 5.1 安装 Rigby2D
 
-**验收 G2**：两个角色的身份/服装/面部一致；无多余手指/嘴/双话筒；头/口/眼能分别动；静态嘴型帧之间无明显跳位；测试画幅1920×1080、无乱码中文、透明图边缘无白边。
+官方入口：
+- 下载：https://github.com/jaisurya-dev-art/rigby2d/releases/latest
+- macOS 文件：Rigby2D_universal.dmg
+- 在线体验：https://rigby2d.com/editor/
+- 文档：https://rigby2d.com/docs/
 
-### 阶段 P3：中文音素对齐与真正的 2D 口型驱动
+优先使用 macOS Desktop App。浏览器编辑器可做快速体验，但正式工程优先使用桌面版并存储在本地项目目录。
 
-**首选路径 A**
+### 5.2 MCP 接入
 
-1. 将定稿语音按说话人、语句切成独立短片段（避免整段混合语音直接对齐）。保留源声总时间轴。
-2. 修订每段准确汉字转录，标点与数字读音以实际发音为准；MFA 需要相对准确的转写与兼容词典。
-3. 安装 MFA 的 `mandarin_mfa` 声学模型与 `mandarin_china_mfa` 字典；针对未登录词或方言/口音人工补词、复核结果。
-4. 执行强制对齐输出 TextGrid/音素时间片段。编写 `phone -> viseme` 可配置映射：闭口辅音、齿唇、张口元音、圆唇元音、扁口元音、闭嘴与静音，平滑转换但不覆盖正确闭合时刻。
-5. 根据 `speaker_id` 在画面中只驱动当前发言人嘴型；另一人呈现自然听众状态。重叠语音需双角色同步或用插图覆盖，并在 QC 清单单独标记。
-6. 对低置信度段、强烈情绪、突发笑声、四川口音与英语词手工复查。
+Rigby2D MCP 文档：
+https://rigby2d.com/docs/mcp.html
 
-**对比路径 B**：在 Adobe Character Animator 导入相同 WAV，执行 `Compute Lip Sync from Scene Audio`，与 A 的相同 10 秒进行盲评。输出帧级结果及返工复杂度；确认中文版与 Mac 版本功能、许可后决定是否采购/选用。
+MCP server 运行于 Node.js 20+。为了让 PSD 解析和 Python scripting 可用，按官方文档 clone Rigby2D 仓库并在其目录 npm install。Cursor 使用项目级 .cursor/mcp.json。
 
-**低成本基线 C**：Rhubarb 的 `phonetic` 模式生成 JSON cue。它对非英语通用，但官方说明通常较英语专用识别器粗糙；只作为基准或后备。
+配置模板见 cursor-mcp-config.example.json。把示例里的路径替换成真实绝对路径：
 
-**验收 G3（在10秒样片上）**：
-
-- 说话人物归属必须 100% 正确；听者无无故张嘴。
-- 逐帧观察 30 个代表性发音/闭口点；显著口型变化对语音的延迟目标 **≤100ms（30fps约3帧）**，90%以上样点达标；这是项目内控制标准，并非模型官方保证。
-- `/b/m/p/` 等闭口音、主要元音形态和句尾闭口有可辨变化；不能“响就张嘴、轻就闭嘴”替代音素形态。
-- 连续 300ms 以上静音，嘴部应保持自然休息（除预设自然表情）；临时人工修复纪录入库。
-- 头部/视线/嘴巴分别能修改，改完后音画同步不漂移。
-
-如 G3 失败，**禁止批量生成30分钟**；先改角色 Rig、中文词典和口型映射。若两条本地路径均不能达到要求，提交高保真云 GPU 选项的试点成本与隐私方案，等用户决定。
-
-### 阶段 P4：动画镜头与场景补充
-
-**镜头模板**（默认优先固定镜位，按真实故事调整）：
-
-- `shot_01_twoshot`：双人对坐，全景，适合切入、相互回应与转折。
-- `shot_02_host_medium`：彦泽中景，提问、讲个人经历、总结。
-- `shot_03_guest_medium`：张岚中景，讲故事、讲行业细节。
-- `shot_04_host_close` / `shot_05_guest_close`：情绪、关键判断。
-- `shot_06_broll_story`：真实旅程相关的地图、旧照片、示意图、资料片段（事实标识）。
-- `shot_07_chapter_card`：章节标题及短转场。
+- command: node
+- args[0]: <RIGBY2D_REPO>/src/mcp/server.js
+- args[1]: --root
+- args[2]: <INTERVIEW_PROJECT_ROOT>
 
-动作规则：眨眼频率与具体表情非机械循环；听众有轻微点头，但不逐句同频点头；主持持麦手臂大体稳定；嘉宾麦克风位置固定；动作前后能平滑衔接。B-roll 仅使用有权素材，并明确示意性质，避免当成真实历史影像。
-
-**验收 G4**：连续60秒具备双人全景、两侧单人镜头、一次故事插图；切镜不失声音连续性，表情与故事情绪一致，人物双眼互视与话筒一致，B-roll 来源可追溯。
-
-### 阶段 P5：自动剪辑和字幕
-
-1. 按已定内容分章，例如：初入行业、最难忘的客人、旅游业生意逻辑、旅居与老年生活、经验和AI。章节按实际原声内容确定，不能硬造上次没有说的话。
-2. `podcast-shot-editor` 读取节目脚本、`speaker_id`、句子时码、角色动作与插图节点，生成 `shots.json`。
-3. HyperFrames 创建 `index.html` 主 composition，每个章节单独 composition；音视频采用本地 `assets/`，所有可编辑文本、字幕采用排版覆盖层。开始先 lint/check/snapshot，避免一次渲染整片才发现错误。
-4. 字幕采用逐字稿校对生成 SRT/覆盖层。每屏优先不超过两行，按阅读节奏分句；保留原声真实表达，避免自动改写人名/地名/专业术语；中文使用可靠授权字体并在渲染前自查。
-5. 有实际地图、票据、表格、照片时切入资料镜头；保留原始出处；需要展示知识/方法时可用无夸大图示。
-6. 进入 DaVinci Resolve 精修整体节奏、音频混合、字幕异常与片尾；若由 HyperFrames 完成所有动作，也可直接交付，避免重复制作两套工程。
-
-**验收 G5**：字幕与发言一一对应、名称/地名无错误；无乱码、无文字超安全区域；章节时长符合内容节奏；随机检查每章首、中、尾，画面/原声/字幕相符。
-
-### 阶段 P6：分级集成与完整发行
-
-按 **10秒 -> 60秒 -> 5分钟 -> 30分钟** 四级门槛推进；失败只回滚对应镜头，不重新生成全部素材。
+配置后在 Cursor MCP 面板确认 rigby2d 已连接，再调用 inspect_project 或 validate_project 验证。MCP 只开放项目根目录，不允许访问整个用户 Home 或系统盘。
 
-- 10秒：各人一次发言、口型、听众、原声同步。
-- 60秒：至少3个镜头、一次交接、一次自然反应、字幕、一次插图。
-- 5分钟：完整章节、音乐淡入淡出、不同景别、关键画面、连贯表达。
-- 30分钟：全片技术 QC + 主持抽检 + 发布版本 QA。
-
-**最终导出**：MP4 H.264 High、1920×1080、30fps、AAC 48kHz、立体声、16:9；常规在线播放码率建议 8–16 Mbps，可根据平台压缩测试。避免重复压缩；另交 ProRes/高质量中间文件按容量选择。
-
-音频：目标综合响度约 -16 LUFS（立体声网络视频工作目标）、true peak 不高于 -1 dBTP；须以实际听感和平台要求调整，尤其不要让会议原声被过度降噪而改变音色。字幕单独存 SRT 并同时提供可关闭/可重新渲染的项目字幕。
-
-**验收 G6**：导出完整，时长/帧率/音频轨正确；字幕完整且无错别字；双人身份稳定、口型声画无感知性偏移；无黑帧/丢音/卡顿/重复帧；音频没有破音；发布包有许可证清单、数据来源清单、内容确认及报告。
-
-## 6. 自动验收指标与人工抽检计划
-
-| 类别 | 检查指标（项目验收阈值） | 手段 | 不合格处理 |
-|---|---|---|---|
-| 原声保真 | 原话不能被误导性拼接；每句能反查原声 | EDL + 人工回听 | 退回内容剪辑 |
-| 说话人 | 10秒首测归属 100%；整片发现错位 0 容忍 | speaker timeline + 人工抽检 | 重新标注/渲染 |
-| 口型时序 | 代表性发音点 90% 落在 ±100ms 内，明显口型错配 0 容忍 | 音频波形 + 帧比较 | 对齐/口型修正 |
-| 不发言者 | 超过300ms无语音时，嘴巴自然休息；不能抢说 | 音轨/viseme 状态和画面 | 修 mouth cues |
-| 口型种类 | 含闭口、圆口、宽口等，禁止只有两个开合帧 | Rig 资产与样片 | 补绘口型 |
-| 角色一致性 | 脸、发型、上衣、围巾、麦克风各景别一致 | 并排关键帧/人工 | 换素材或重绘 |
-| 双人对视 | 互听镜头视线方向正确；非口头点头机器动作 | 镜头抽查 | 运动曲线修正 |
-| 字幕 | 人名/地名零错；无乱码；两行以内优先；不遮关键主体 | SRT 校验/中文 QA/视觉抽查 | 修改字幕 |
-| 镜头编辑 | 无不合理跳切、黑帧、音频断口、重复素材突变 | FFprobe/黑帧检测/人工 | 剪点修复 |
-| 音频 | 目标 -16±1 LUFS；true peak <=-1 dBTP；无可感知音色失真 | ebur128/truepeak + A/B | 降噪/压缩回退 |
-| 导出 | 1920×1080，30fps，H.264/AAC，音频48kHz；容器可播放 | ffprobe + 抽帧 | 重新导出 |
-| 资产出处 | 素材、字体、音乐、肖像音频授权记录齐备 | assets_manifest/permissions | 禁止发布 |
-
-抽查样本：10秒整体逐帧；60秒整体回看；5分钟整体回看；30分钟首尾全看+每章节关键段+至少10处说话人切换。最终正式发布由主持从头到尾至少正常速度完整观看一次（与自动测评相结合）。以上阈值是项目建议 QA 规范，需要在首个样片试验后调整。
-
-## 7. 实际安装/CLI 运行参考
-
-**注意**：下面是让 Codex 核对安装与接口的命令示例，尚未在用户 Mac 上运行。第一次必须先 `--help` 检查现用版本。MFA 环境独立安装，避免与视频渲染依赖冲突。
-
-```bash
-# 基础依赖，确认路径和版本
-brew install ffmpeg sox uv node@22
-node -v; ffmpeg -version; ffprobe -version; python3 --version
-
-# 安装/选择 HyperFrames Agent Skills；交互安装时选核心四项
-npx skills add heygen-com/hyperframes
-npx hyperframes doctor
-
-# 原声保全：临时命名的原始文件应由 Codex 实际发现并定位
-ffmpeg -i '00_source/interview_original.mp4' -vn -ar 48000 \
-  -c:a pcm_s24le '01_audio/original_master.wav'
-ffmpeg -i '01_audio/original_master.wav' -ac 1 -ar 16000 \
-  -c:a pcm_s16le '01_audio/asr_16k_mono.wav'
-
-# 中文强制对齐模型；语料按 speaker/句子准备准确同名 WAV + 转录
-mfa model download acoustic mandarin_mfa
-mfa model download dictionary mandarin_china_mfa
-# mfa align '05_alignment/mfa_corpus' mandarin_china_mfa mandarin_mfa '05_alignment/textgrids' --clean
-
-# Rhubarb：仅当已安装并核对 CLI 版本时做对照试验
-# rhubarb -r phonetic -f json -o '05_alignment/rhubarb_guest.json' 'guest_test.wav'
-
-# HyperFrames 项目，顺序：初始化 -> 检查 -> 取样 -> 本地渲染
-npx hyperframes init '07_timeline/hyperframes_project' --skip-skills
-# 在项目目录内按官方格式编写场景后：
-# npx hyperframes lint
-# npx hyperframes check --json
-# npx hyperframes snapshot --at 0,10,30
-# npx hyperframes render --quality draft -o '08_preview/test_60s.mp4'
-# npx hyperframes render --quality delivery -o '09_delivery/episode_01_1080p.mp4'
-
-# 导出媒体元数据与音频响度
-ffprobe -v error -show_streams -show_format \
-  -of json '09_delivery/episode_01_1080p.mp4' > 'qa/final_ffprobe.json'
-ffmpeg -i '09_delivery/episode_01_1080p.mp4' \
-  -filter_complex ebur128=peak=true -f null - 2> 'qa/loudness.log'
-```
-
-如果 Mac 上未安装 `node@22` 到 PATH，Codex 应先修复 Node 版本；不要静默使用低版本。若工具安装失败，先阅读官方 README 和发行包、核对路径及依赖，再回报真实错误。
-
-## 8. 质量和成本控制：先小样，再批量
-
-**M4 32GB 资源限制**：
-
-- 2D 动画、音频、字幕、FFmpeg/HyperFrames 适合本地制作，但30分钟最终渲染必须根据具体项目测速度。
-- 完全生成式 AI 动画的每秒生成成本与时延显著更高，还可能产生身份漂移、麦克风错乱、画面重构；只做用户批准的短镜头试验。
-- LTX-2 MLX 等模型可能需要下载数十 GB 权重并占用大量统一内存；使用量化版和 `--low-ram` 仍需实测 CPU/GPU 峰值、磁盘压力、耗时。
-- 外置盘项目路径可迁移，但不能擅自搬迁其他程序 `runtime`。建议清理临时缓存并保留原始音视频及最终项目源码。
-- 不主动调用收费的云 GPU、AI 视频 API、HeyGen、其他视频云渲染；如确需使用，应单独列出费用、数据上传范围、模型权重/内容使用约束供用户决策。
-
-**进度闸门**：
-
-| 顺序 | 样片 | 检查目标 | 通过后允许 |
-|---|---|---|---|
-| Gate 0 | 音频/素材完整性 | 原声、角色、许可可用 | 立项 |
-| Gate 1 | 10秒原声口型 | 两人真实中文原声、多口型、听者状态 | 扩展模板 |
-| Gate 2 | 60秒完整场景 | 人物动作、双人对视、切镜、字幕、话筒 | 章节制作 |
-| Gate 3 | 5分钟章节 | 观看感受、人物一致性、自动渲染稳定性 | 正式制作 |
-| Gate 4 | 30分钟全集 | 技术 QA、内容 QA、原声还原、完整播放 | 发布 |
-
-每关记录 `pass/fail`、失败镜头、帧号、音轨、截图、修复方式、再测结果。任何 P0 错误（原声内容错用、错误说话人、授权缺失、明显错口型）阻断整片发布。
-
-## 9. 视频语言与视觉风格约束
-
-1. **整体**：温暖、清晰的动漫播客场景；人物处于同一个空间，主色调、镜头色温和阴影一致。
-2. **摄影**：保留固定机位的真实播客感，使用近景和双人镜头转换。不要满屏随机移动、持续推拉或过量动效。
-3. **故事**：当谈到第一次带团、旅游行业赚钱方式、老年旅居等话题时，可以插入路线图、档案图片、示意手绘或文字摘要；历史画面明确标为“示意”。
-4. **人物**：动作小而自然；单帧表情连贯；不能发生突然换脸、工牌变化、熊猫图案消失、两个话筒、手部断裂等。
-5. **字幕**：中文字体为后期排版层。严格检查标点、错字、长度与安全区域。公众号封面和分享裁切另做专门版式，不从画面随机裁剪。
-6. **声音**：声音原始风格保留。用户此前反馈录音听感有异样，应提供保留原声、轻处理两版 A/B 小样，优先以本人确认版本作为全片母带。
-7. **音轨**：音乐轻铺、不盖人声，若来源不明确直接不用；被采访者的哭笑、情绪和有效停顿应保留。
-
-## 10. 正式交付清单
-
-- `episode_01_1080p.mp4` — 正式横版成片。
-- `episode_01.srt` — 中文校对字幕；可选时间戳双人逐字稿。
-- `episode_01_cover.png` — 横版首图；分享方图按最终发布平台另导出。
-- `episode_01_vertical_highlights/` — 按实际可传播内容截取的短片（可选）。
-- `07_timeline/hyperframes_project/` — 可编辑合成工程；若有 DaVinci 工程则一并交付。
-- `03_characters/` — 可复用角色分层和 rig 定义。
-- `05_alignment/` — 原声对应的音素、口型数据，便于修改和审查。
-- `qa/release_report.md` — 测试记录、问题/返工、通过标准、性能、版本/模型清单。
-- `permissions.md` 与 `assets_manifest.json` — 录音素材授权及第三方许可清单。
-- `knowledge_markers.json` — 访谈内容与知识片段时间码，供后续行业知识库生产使用（不影响视频交付）。
-
-## 11. 权威参考与来源
-
-- HyperFrames Skills: https://github.com/heygen-com/hyperframes/blob/main/docs/guides/skills.mdx
-- HyperFrames CLI: https://github.com/heygen-com/hyperframes/blob/main/skills/hyperframes-cli/SKILL.md
-- whisper.cpp: https://github.com/ggml-org/whisper.cpp
-- Mandarin MFA official example: https://montreal-forced-aligner.readthedocs.io/en/latest/first_steps/alignment_example.html
-- MFA forced alignment: https://montreal-forced-aligner.readthedocs.io/en/latest/user_guide/workflows/alignment.html
-- Rhubarb: https://github.com/DanielSWolf/rhubarb-lip-sync
-- Adobe Character Animator (audio to lip-sync): https://helpx.adobe.com/adobe-character-animator/desktop/behaviors/learn-more-about-behaviors/body-directly-controlled.html
-- Live2D automatic lip sync limitations: https://docs.live2d.com/en/cubism-sdk-manual/mouthmovement-unity/
-- LTX-2 MLX Apple Silicon: https://github.com/dgrauet/ltx-2-mlx
-- Local lip-sync alternative: https://github.com/mmzz164/lip-sync-mac
-- Local image generation: https://github.com/mflux-community/mflux
-- OpenTimelineIO: https://github.com/AcademySoftwareFoundation/OpenTimelineIO
-- LongCat 1.6 CUDA: https://github.com/meituan-longcat/LongCat-Video
-
-**工程状态说明**：以上为可实施方案和验收设计。只有 Mac 本地真实10秒样片经彦泽确认、且所需工具依赖经 Codex 实测，才将对应模块标注为“已验证可用”。
+### 5.3 Cursor 应调用的 Rigby2D MCP 工具
+
+| 工具 | 用途 |
+|---|---|
+| detect_parts | 检查 PSD 图层识别是否正确 |
+| autorig | 从分层 PSD 生成角色 Rig |
+| inspect_project / describe_rig | 检查骨骼、图层和资源 |
+| validate_project | 检查缺失图片、动画和工程结构 |
+| sample_pose | 采样姿势、检查角色位置 |
+| add_animation / batch_edit | 创建动画与批量设置关键帧 |
+| save_pose / apply_pose | 保存并复用表情和姿势 |
+| add_face_control / set_face_control | 眉、眼、情绪控制 |
+| add_audio_track / lip_sync | 添加音轨并生成 viseme 口型 |
+| set_workspace / set_output | 设置 Film workspace、1080p、30fps |
+| add_actor / add_clip / set_actor | 建立双人场景与角色片段 |
+| set_layer_depth | 设置背景视差 |
+
+**重要：** MCP 不能渲染 MP4、WebM 或 PNG 序列。Cursor 负责准备和验证工程；最终渲染由 Rigby2D 编辑器执行。
+
+---
+
+## 6. 中文口型与双人声音时间线
+
+### 6.1 首选：Rigby2D 原生中文转写
+
+Rigby2D 的 Lip-sync 文档列出 Chinese 语言，使用本机 Whisper 处理音频，不上传声音；支持词语时间和九类 viseme：
+
+- A、E、I、O、U
+- MBP（闭唇）
+- FV（唇齿）
+- L（舌位）
+- rest（静音）
+
+官方文档：https://rigby2d.com/docs/lip-sync.html
+
+先用真实中文原声做10秒测试，观察它的转写文本、时间戳和嘴型，不得仅凭“支持 Chinese”就宣称达到高准确度。
+
+### 6.2 双人访谈的说话人归属
+
+双人不能共用同一条未区分说话人的口型轨道，否则两个人会同时跟着对方说话。
+
+流程：
+1. 逐字稿和原视频建立 speaker_turns.json，每段标注 host、guest、overlap 或 unknown。
+2. 人工确认每个说话人起止时间；重叠发言单独标记。
+3. 为彦泽、张岚分别生成 speaker-specific word timing JSON。
+4. 将各自 timing JSON 用于各自角色 .rigby 的 lip_sync。Rigby2D 支持 Whisper word-timing JSON 或 {word,start,end} 格式；时间以音轨起点为基准。
+5. 每个角色动画工程可以有一个音频参考轨，设置为静音/音量0；最终节目只在场景或 HyperFrames 中混入一次原始主音轨，避免双重音频。
+6. 对重叠段，两人可同时按各自 timing 动嘴；如果时间戳不可靠，切动态漫画/插画覆盖，保留原始声音。
+7. lead 默认2帧，min_hold 约0.05秒；需用10秒样片调整，不能照搬默认值而不验收。
+
+### 6.3 备用口型方案
+
+- 如果 Rigby2D 原生 Chinese transcription 对专有名词、方言、快速语音不够准确，先人工校正文本。
+- 可导入 Whisper word-timing JSON 或其他支持的词级时间戳。
+- MFA 只作为确有必要时的备选；它的音素结果需要额外 G2P/音素到 viseme 映射，不能直接当作可用口型轨道。
+- 不使用纯响度开合嘴作为正式版口型。
+
+---
+
+## 7. 双人骨骼动画与镜头设计
+
+### 7.1 两套角色 Rig
+
+每人独立 .rigby，先单人 Rig、单人动作、单人口型通过，再进入双人 Scene。
+
+基础骨骼：
+- root / hip / chest / neck / head
+- upperarm / forearm / hand（左右）
+- hair_back / hair_front / bangs
+- eye_l / eye_r / pupil_l / pupil_r / brow_l / brow_r
+- jaw / mouth slot
+- prop_mic / prop_scarf / prop_badge（按角色）
+
+手持麦克风必须绑定到彦泽手部或手臂骨骼，不能作为一个独立悬浮图层。张岚桌面麦克风绑定到场景道具层，位置固定。
+
+### 7.2 动作库
+
+每个角色至少建立：
+- idle_breathe_a / idle_breathe_b：不同呼吸微动作。
+- listen_neutral：自然倾听。
+- listen_attentive：轻微前倾。
+- nod_once：一次轻点头，不能循环。
+- think：思考/短暂停顿。
+- smile：自然微笑。
+- laugh_soft：轻笑。
+- speak_neutral：自然讲话身体状态。
+- speak_gesture_a / speak_gesture_b：两种轻手势。
+- surprised / serious：按真实谈话内容触发。
+
+口型轨道与身体动作需要共存。若当前 Rigby2D 版本不能在同一角色动画中按需要叠加，Cursor 必须采用组合动画或生成合并后的关键帧，不得在未测试前假定支持多动画轨道混合。
+
+### 7.3 双人 Scene
+
+Rigby2D Film Scene 可把多个 .rigby 角色作为 Actor 放在同一舞台，角色各有动画片段，场景有相机、背景层和视差层。
+
+主场景层级：
+1. distant：窗外山景/天空。
+2. mid：墙面、窗框、书架、灯。
+3. near：绿植、桌面、杯子、麦克风底座。
+4. actors：彦泽、张岚。
+5. foreground：必要时的桌沿/前景装饰。
+
+镜头：
+- two_shot_master：双人全景。
+- host_closeup：彦泽中近景。
+- guest_closeup：张岚中近景。
+- host_over_shoulder / guest_over_shoulder：过肩镜头（若资产允许）。
+- reaction_guest / reaction_host：倾听反应镜头。
+
+镜头切换遵循谈话内容和情绪，不设固定秒数机械轮换。单人特写必须让人物视线指向画内对方；双人镜头保持对视关系。
+
+---
+
+## 8. 动态漫画与 AI 插画
+
+### 8.1 什么时候切动态漫画
+
+- 受访者讲到过去经历、某次旅行、某个城市。
+- 讲行业流程、资源协作、经营方式。
+- 讲具体案例、难题、突发事件。
+- 需要解释一个概念或展示数据。
+- 双人对话长时间停留在同一镜头，需要适度视觉变化。
+
+### 8.2 动态漫画镜头类型
+
+- 单张插画 + 慢推近/拉远。
+- 2–4层拆分图 + 轻微视差。
+- 3–5格漫画分镜依次出现。
+- 地图、路线、地点标签和时间线。
+- 关键句大字卡、引用卡、章节卡。
+- 同一插画做不同裁切和镜头运动，但不能重复得像循环背景。
+
+### 8.3 AI 插画规则
+
+- 优先使用本地 MFLUX（若 M4 环境可运行）或已有授权素材。
+- HyperFrames media-use 可以通过本地 FLUX（MFLUX）生成图片；本项目明确使用 local-only，不使用 HeyGen/云生成/收费模型。
+- AI 插画重点生成环境、地点、物件、流程示意，不要每个镜头重新生成彦泽和张岚。
+- 真实地点的建筑、景区、酒店等，如果画面不是实拍或经核实的真实照片，必须标注“AI示意图/情景示意”。
+- 不得用 AI 插画伪装成采访中真实发生的历史现场。
+- 画面内不生成中文文字，标题、地名和说明由 HyperFrames 文字层添加。
+- 每张图记录 prompt、模型/版本、来源、生成日期、审核状态。
+
+### 8.4 镜头占比建议（可按内容调整）
+
+- 60–70%：Rigby2D 双人对话/单人特写。
+- 20–30%：动态漫画和 AI 插画。
+- 5–10%：章节、信息图、标题卡。
+
+这只是第一期的剪辑参考，不作为强制配比。观众能否看下去优先于配比。
+
+---
+
+## 9. HyperFrames 最终编排
+
+HyperFrames 负责：
+- 接入 Rigby2D 输出的对话片段。
+- 插入动态漫画与 AI 插画。
+- 章节卡、字幕、引用、人物标签、信息图。
+- 片头、片尾、转场、BGM、音效。
+- 统一时间线、预览、检查和本地渲染。
+
+Skills：
+- /hyperframes：视频结构、HTML 场景和渲染契约。
+- /hyperframes-cli：初始化、检查、截图、预览、渲染、时间线。
+- /hyperframes-registry：查找标题、转场、字幕和图形组件。
+- /media-use：本地图片、音效、音乐和素材管理；本项目不走付费 provider。
+
+安装/更新核心 Skills：在项目目录执行 npx hyperframes skills update，再由 Cursor 读取实际 Skill 文件。
+
+生产流程：
+1. npx hyperframes init <project-dir> --skip-skills。
+2. 建立一个章节一个 composition。
+3. 把 Rigby2D 渲染片段放入 assets/，素材台账保留来源。
+4. 动态漫画以固定素材 + 时间轴动画实现，所有动作必须可按帧确定性重现。
+5. 加 SRT/字幕层；所有中文字体随项目存档并核实授权。
+6. npx hyperframes lint、npx hyperframes check --json。
+7. npx hyperframes snapshot --review，检查每个章节中段和镜头切换点。
+8. 打开 HyperFrames desktop preview 给彦泽检查；确认后才执行 delivery render。
+9. ffprobe 检查时长、帧率、分辨率、编码；FFmpeg 检查音量和黑帧。
+
+---
+
+## 10. 30分钟生产步骤
+
+1. 内容剪辑：从约58分钟原访谈选出完整约30分钟内容，锁定最终原声。
+2. 转写：Whisper 本地识别，人工校对；说话人和重叠段落确认。
+3. 角色素材：完成两张统一风格的分层 PSD。
+4. 单人 Rig：彦泽、张岚分别 AutoRig，人工修关节和权重。
+5. 口型：先做10秒中文口型；过关后按章节生成完整时间轴。
+6. 动作：建立角色动作库，按内容标记自然动作。
+7. 双人 Scene：构建演播室、两个 Actor、背景层、相机镜头。
+8. 动态漫画：挑选关键故事和行业知识点制作插画分镜。
+9. HyperFrames：把 Rigby2D 片段、漫画、AI 插画、字幕和音效编排为章节。
+10. QA：10秒 → 60秒 → 5分钟 → 全片；不跳级。
+11. 导出：1080p MP4、SRT、封面、可编辑工程、素材清单和验收报告。
+
+---
+
+## 11. 测试与验收门槛
+
+| Gate | 内容 | 必须通过 |
+|---|---|---|
+| G0 | 软件安装、Cursor MCP、目录权限 | MCP 能列出工具；只访问项目目录 |
+| G1 | 两套分层 PSD 和 AutoRig | 角色比例统一；部件识别正确；关节无明显穿帮 |
+| G2 | 单人中文10秒口型 | 说话人、中文转写、viseme、静音和原声均通过 |
+| G3 | 双人10秒对话 | 两人互视、发言交接、倾听者闭口、麦克风正确 |
+| G4 | 60秒完整镜头 | 双人/特写/反应镜头、动作、字幕自然 |
+| G5 | 3–5分钟章节 | 骨骼动画 + 动态漫画 + AI 插画混合效果通过 |
+| G6 | 30分钟全片 | 内容、画面、音频、字幕、授权、导出全部通过 |
+
+### 关键指标
+
+- 10秒样片：说话人归属100%正确。
+- 口型：至少抽查30个闭唇/张口/圆口/扁口及静音点，90%以上时间偏差不超过±100ms；未通过就修复对齐和嘴型。
+- 听众：对方说话时，听众嘴巴自然闭合；有真实倾听反应，不能每句话机械点头。
+- 人物：脸型、发型、服装、熊猫元素、围巾、工牌、麦克风位置一致。
+- 动作：同一动作循环不得连续重复超过两次；需要多种 Idle/Reaction 变体。
+- 画面：无重影、浮空、贴纸边缘、透视错位、背景穿插、手指和麦克风畸形。
+- 动态漫画：每个 AI 示意图有来源记录；不得冒充实拍。
+- 音频：最终原始主音轨只混入一次；无双重回声、爆音、截断。
+- 导出：1920×1080、30fps、H.264/AAC、48kHz；目标约-16 LUFS（立体声网络节目参考）且 True Peak ≤ -1 dBTP，最终以实际听感复核。
+- 30分钟成片必须完整播放检查。
+
+---
+
+## 12. 最终交付
+
+- episode_01_1080p.mp4
+- episode_01.srt
+- episode_01_cover.png
+- episode_01_highlights/（可选）
+- host.rigby、guest.rigby、studio_scene.rigby
+- 两个人物分层 PSD
+- speaker_turns.json、word timing JSON、口型 QA 记录
+- HyperFrames 工程、动态漫画插画、素材台账
+- qa/release_report.md
+- permissions.md
+
+---
+
+## 13. 官方文档
+
+- Rigby2D 官网：https://rigby2d.com/
+- Rigby2D 安装：https://rigby2d.com/docs/installation.html
+- Rigby2D AutoRig：https://rigby2d.com/docs/autorig.html
+- Rigby2D Lip-sync：https://rigby2d.com/docs/lip-sync.html
+- Rigby2D Film workspace：https://rigby2d.com/docs/film.html
+- Rigby2D Scenes：https://rigby2d.com/docs/scenes.html
+- Rigby2D MCP：https://rigby2d.com/docs/mcp.html
+- Rigby2D MCP 工具参考：https://rigby2d.com/docs/mcp-tools.html
+- Cursor MCP：https://docs.cursor.com/context/model-context-protocol
+- HyperFrames：https://github.com/heygen-com/hyperframes
+
+**状态纪律：** 方案和工程文件提交 GitHub 不等于本机安装或样片通过。每个 Gate 必须保存真实运行证据、预览文件和人工验收结果。
